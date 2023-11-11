@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Processing App</title>
+</head>
+<body>
+    <h1>Image Processing App</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="gambar1">Upload Image:</label>
+        <input type="file" name="gambar1" accept="image/*" required>
+        <br>
+        <label for="folder">Choose Folder:</label>
+        <input type="file" name="folder[]" webkitdirectory directory multiple required>
+        <br>
+        <button type="submit">Process Images</button>
+    </form>
+</body>
+</html>

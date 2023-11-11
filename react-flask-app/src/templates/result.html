@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Processing Results</title>
+</head>
+<body>
+    <h1>Image Processing Results</h1>
+    <p>Elapsed Time: {{ elapsed_time }} seconds</p>
+    <h2>Top 10 Similar Images</h2>
+    <ul>
+        {% for image, similarity in top_images %}
+            <li>
+                <img src="{{ url_for('download_file', filename=basename(image)) }}" alt="Similar Image">
+                <p>Similarity: {{ similarity }}%</p>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
