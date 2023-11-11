@@ -9,6 +9,7 @@ import multiprocessing
 import numpy as np
 import imageprocess as pros
 from os.path import basename
+import shutil
 
 def htgduaelmnt (mat,hasil):
     for i in range(len(mat)):
@@ -66,7 +67,6 @@ def process_image(image_path, gambar1, results):
 
 def main_process(gambar1_path, destination_folder):
     gambar1_matrix = cv2.imread(gambar1_path)
-    pros.ubahbw(gambar1_matrix)
 
     files = os.listdir(destination_folder)
     total_files = len(files)
@@ -86,6 +86,7 @@ def main_process(gambar1_path, destination_folder):
         pool.close()
         pool.join()
 
+        print(results)
         sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
         top_images = sorted_results[:5]  # Ambil 10 sementara deh
         print(top_images)
@@ -96,7 +97,7 @@ def main_process(gambar1_path, destination_folder):
 
 app = Flask(__name__)
 
-app.config['UPLOAD_FOLDER'] = "test/datasave"
+app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test', 'datasave')
 
 @app.route('/')
 def home():
@@ -108,11 +109,15 @@ def download_file(filename):
 
 @app.route('/upload', methods=['POST'])
 def upload():
+
     gambar1 = request.files['gambar1']
     folder = request.files.getlist('folder[]')
 
     destination_folder = app.config['UPLOAD_FOLDER']
-    os.makedirs(destination_folder, exist_ok=True)
+    if os.path.exists(destination_folder):
+        shutil.rmtree(destination_folder)
+
+    os.makedirs(destination_folder)
 
     if folder:
         for uploaded_file in folder:
@@ -120,13 +125,14 @@ def upload():
                 file_path = os.path.join(destination_folder, secure_filename(uploaded_file.filename))
                 uploaded_file.save(file_path)
                 print(f'Saving file: {file_path}')
+    pros.ubahbwfolder(destination_folder)
 
     gambar1_path = os.path.join(destination_folder, secure_filename(gambar1.filename))
     gambar1.save(gambar1_path)
     print(f'gambar1: {gambar1.filename}')
     print(f'folder: {folder}')
 
-    top_images, elapsed_time = main_process(gambar1_path, destination_folder)
+    top_images, elapsed_time = main_process(gambar1_path, 'test/dataolah')
 
     return render_template('result.html', top_images=top_images, elapsed_time=elapsed_time, basename=basename)
 

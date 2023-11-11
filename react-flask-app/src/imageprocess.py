@@ -17,7 +17,7 @@ def ubahbw(matriksgambar):
 
 def ubahbwfolder(folderinput):
     path = folderinput
-    output = "test/dataolah"
+    output = os.path.join("test/dataolah")
 
     if os.path.exists(output):
         shutil.rmtree(output)
@@ -30,10 +30,17 @@ def ubahbwfolder(folderinput):
         if not (filename.endswith('.png') or filename.endswith('.jpg') or filename.endswith('.jpeg')):
             continue
 
-        image = cv2.imread(input_path)
-        bw_image = ubahbw(image)
-        output_path = os.path.join(output, filename)
-        cv2.imwrite(output_path, bw_image)
+        try:
+            image = cv2.imread(input_path)
+            if image is None:
+                raise Exception(f"Failed to read image: {input_path}")
+
+            bw_image = ubahbw(image)
+            output_path = os.path.join(output, filename)
+            print(f"Processing {filename} and saving to {output_path}")
+            cv2.imwrite(output_path, bw_image)
+        except Exception as e:
+            print(f"Error processing {filename}: {e}")
 
 def compressimage(gambar1):
     gambar1 = Image.fromarray(gambar1)
