@@ -3,6 +3,11 @@
 # ini kalau bingung react
 # cd react-flask-app dulu
 
+cara jalanin dummy web
+
+cd sampe ke src
+terus jalanin : python app.py
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
