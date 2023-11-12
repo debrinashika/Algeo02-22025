@@ -1,6 +1,9 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, session
 from werkzeug.utils import secure_filename
 from tqdm import tqdm
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from PIL import Image
 import cv2
 import time
 import os
@@ -10,6 +13,23 @@ import numpy as np
 import imageprocess as pros
 from os.path import basename
 import shutil
+
+def create_pdf(top_images, destination_folder,time):
+    pdf_path = os.path.join(destination_folder, 'result.pdf')
+
+    c = canvas.Canvas(pdf_path, pagesize=letter)
+
+    c.drawString(400, 720 - 10, f'Total Elapsed Time: {time:.5f} seconds')
+    for i, (image_path, similarity_score) in enumerate(top_images):
+        c.drawImage(image_path, 20, 720 - (i%4 + 1) * 150, width=150, height=150)
+        c.drawString(200, 720 - (i%4 + 1) * 150 + 75, f'Similarity: {similarity_score:.5f}')
+
+        if(i%4==3):
+            c.showPage()
+
+    c.save()
+
+    return pdf_path
 
 def htgduaelmnt (mat,hasil):
     for i in range(len(mat)):
@@ -60,14 +80,13 @@ def compare(gambar1,gambar2):
 
 def process_image(image_path, gambar1, results):
     gambar2 = cv2.imread(image_path)
-    pros.ubahbw(gambar1)
 
     similarity_score = compare(gambar1, gambar2)
     results.append((image_path, similarity_score))
 
 def main_process(gambar1_path, destination_folder):
     gambar1_matrix = cv2.imread(gambar1_path)
-
+    gambar1_matrix = pros.ubahbw(gambar1_matrix)
     files = os.listdir(destination_folder)
     total_files = len(files)
 
@@ -96,6 +115,7 @@ def main_process(gambar1_path, destination_folder):
     return top_images, elapsed_time
 
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test', 'datasave')
 
@@ -134,7 +154,18 @@ def upload():
 
     top_images, elapsed_time = main_process(gambar1_path, 'test/dataolah')
 
+    session['top_images'] = top_images
+    session['elapsed_time'] = elapsed_time
+
     return render_template('result.html', top_images=top_images, elapsed_time=elapsed_time, basename=basename)
+
+@app.route('/download-pdf')
+def download_pdf():
+    top_images = session.get('top_images', [])
+    elapsed_time = session.get('elapsed_time', 0)
+
+    pdf_path = create_pdf(top_images, "test/datasave",elapsed_time)
+    return send_from_directory("test/datasave", 'result.pdf', as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
