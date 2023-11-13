@@ -13,9 +13,6 @@ import numpy as np
 import imageprocess as pros
 from os.path import basename
 import shutil
-from color_descriptor import ColorDescriptor 
-from cbir_utils import MapReduce, feature_extraction
-import glob
 
 def create_pdf(top_images, destination_folder,time):
     pdf_path = os.path.join(destination_folder, 'result.pdf')
@@ -81,25 +78,17 @@ def compare(gambar1,gambar2):
     # print(f"Lama waktu proses pemrosesan: {elapsed_time:.2f} detik")
     return sim
 
-def process_image_color(image_path, cd, results):
-    # Ekstraksi fitur dari gambar
-    image = cv2.imread(image_path)
-    features = cd.describe(image)
+def process_image_color(image_path, gambar1, results):
+    gambar2 = cv2.imread(image_path)
 
-    # Tulis fitur ke file
-    features = [str(f) for f in features]
-    result = ("%s,%s\n" % (image_path, ",".join(features)))
+    similarity_score = pros.compare_color(gambar1, gambar2)
+    results.append((image_path, similarity_score))
 
-    results.append(result)
-
-def main_process_color(gambar1_path, destination_folder, cd):
-    gambar1 = cv2.imread(gambar1_path)
-    gambar1_hsv = cd.rgb_to_hsv(gambar1)
-
-    files = glob.glob(os.path.join(destination_folder, '*.jpg'))
+def main_process_color(gambar1_path, destination_folder):
+    gambar1_matrix = cv2.imread(gambar1_path)
+    gambar1_matrix = pros.ubahwarna(gambar1_matrix)
+    files = os.listdir(destination_folder)
     total_files = len(files)
-
-    results = []
 
     with tqdm(total=total_files, desc="Processing Images") as progress:
         start_time = time.time()
@@ -110,16 +99,30 @@ def main_process_color(gambar1_path, destination_folder, cd):
 
         for file in files:
             if file != '':
-                pool.apply_async(process_image_color, args=(file, cd, results, gambar1_hsv))
+                image_path = os.path.join(destination_folder, file)
+                pool.apply_async(process_image_texture, args=(image_path, gambar1_matrix, results))
 
         pool.close()
         pool.join()
 
         print(results)
+        sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
+        top_images = sorted_results[:5]  # Ambil 10 sementara deh
+        print(top_images)
         end_time = time.time()
         elapsed_time = end_time - start_time
 
-    return results, elapsed_time
+    return top_images, elapsed_time
+
+def calculate_similarity(features1, features2):
+    # Hitung similarity antara dua vektor fitur
+    # Misalnya, menggunakan cosine similarity
+    dot_product = sum(a * b for a, b in zip(features1, features2))
+    norm1 = sum(a ** 2 for a in features1) ** 0.5
+    norm2 = sum(b ** 2 for b in features2) ** 0.5
+
+    similarity = dot_product / (norm1 * norm2 + 1e-10)
+    return similarity
 
 def process_image_texture(image_path, gambar1, results):
     gambar2 = cv2.imread(image_path)
@@ -196,12 +199,10 @@ def upload():
     gambar1_path = os.path.join(destination_folder, secure_filename(gambar1.filename))
     gambar1.save(gambar1_path)
 
-    cd = ColorDescriptor((8, 12, 3))  # Inisialisasi objek ColorDescriptor
-
     mode = request.form.get('mode', 'color')  # Mode default: color
 
     if mode == 'color':
-        top_images, elapsed_time = main_process_color(gambar1_path, destination_folder, cd)
+        top_images, elapsed_time = main_process_color(gambar1_path, destination_folder)
     elif mode == 'texture':
         top_images, elapsed_time = main_process_texture(gambar1_path, destination_folder)
     else:
@@ -210,7 +211,7 @@ def upload():
     session['top_images'] = top_images
     session['elapsed_time'] = elapsed_time
 
-    return render_template('result.html', top_images=top_images, elapsed_time=elapsed_time, basename=basename)
+    return render_template('result.html', top_images=top_images, elapsed_time=elapsed_time, gambar = gambar1.filename, basename=basename)
 
 @app.route('/download-pdf')
 def download_pdf():
