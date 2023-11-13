@@ -211,7 +211,7 @@ def upload():
     session['top_images'] = top_images
     session['elapsed_time'] = elapsed_time
 
-    return render_template('result.html', top_images=top_images, elapsed_time=elapsed_time, gambar = gambar1.filename, basename=basename)
+    return render_template('index.html', top_images=top_images, elapsed_time=elapsed_time, gambar = gambar1.filename, basename=basename)
 
 @app.route('/download-pdf')
 def download_pdf():
