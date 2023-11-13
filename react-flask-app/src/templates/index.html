@@ -14,8 +14,12 @@
                 <label for="folder">Choose Folder:</label>
                 <input type="file" name="folder[]" webkitdirectory directory multiple required>
                 <br>
-                <label for="gambar1">Upload Image:</label>
-                <input type="file" name="gambar1" accept="image/*" required>
+                <div class="img-area" data-img="">
+                    <i class='bx bxs-cloud-upload icon'></i>
+                    <h3>Upload Image</h3>
+                    <p>Image size must be less than <span>2MB</span></p>
+                </div>
+                <button class="select-image" onclick="document.getElementById('file').click()">Select Image</button>
                 <br>
                 <label for="mode">Choose Mode:</label>
                 <select name="mode" id="mode">
