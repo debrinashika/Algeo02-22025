@@ -13,6 +13,9 @@ import numpy as np
 import imageprocess as pros
 from os.path import basename
 import shutil
+from color_descriptor import ColorDescriptor 
+from cbir_utils import MapReduce, feature_extraction
+import glob
 
 def create_pdf(top_images, destination_folder,time):
     pdf_path = os.path.join(destination_folder, 'result.pdf')
@@ -78,13 +81,53 @@ def compare(gambar1,gambar2):
     # print(f"Lama waktu proses pemrosesan: {elapsed_time:.2f} detik")
     return sim
 
-def process_image(image_path, gambar1, results):
+def process_image_color(image_path, cd, results):
+    # Ekstraksi fitur dari gambar
+    image = cv2.imread(image_path)
+    features = cd.describe(image)
+
+    # Tulis fitur ke file
+    features = [str(f) for f in features]
+    result = ("%s,%s\n" % (image_path, ",".join(features)))
+
+    results.append(result)
+
+def main_process_color(gambar1_path, destination_folder, cd):
+    gambar1 = cv2.imread(gambar1_path)
+    gambar1_hsv = cd.rgb_to_hsv(gambar1)
+
+    files = glob.glob(os.path.join(destination_folder, '*.jpg'))
+    total_files = len(files)
+
+    results = []
+
+    with tqdm(total=total_files, desc="Processing Images") as progress:
+        start_time = time.time()
+        num_processes = 4
+        pool = Pool(processes=num_processes)
+        manager = multiprocessing.Manager()
+        results = manager.list()
+
+        for file in files:
+            if file != '':
+                pool.apply_async(process_image_color, args=(file, cd, results, gambar1_hsv))
+
+        pool.close()
+        pool.join()
+
+        print(results)
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+
+    return results, elapsed_time
+
+def process_image_texture(image_path, gambar1, results):
     gambar2 = cv2.imread(image_path)
 
     similarity_score = compare(gambar1, gambar2)
     results.append((image_path, similarity_score))
 
-def main_process(gambar1_path, destination_folder):
+def main_process_texture(gambar1_path, destination_folder):
     gambar1_matrix = cv2.imread(gambar1_path)
     gambar1_matrix = pros.ubahbw(gambar1_matrix)
     files = os.listdir(destination_folder)
@@ -100,7 +143,7 @@ def main_process(gambar1_path, destination_folder):
         for file in files:
             if file != '':
                 image_path = os.path.join(destination_folder, file)
-                pool.apply_async(process_image, args=(image_path, gambar1_matrix, results))
+                pool.apply_async(process_image_texture, args=(image_path, gambar1_matrix, results))
 
         pool.close()
         pool.join()
@@ -129,11 +172,10 @@ def download_file(filename):
 
 @app.route('/upload', methods=['POST'])
 def upload():
-
     gambar1 = request.files['gambar1']
     folder = request.files.getlist('folder[]')
-
     destination_folder = app.config['UPLOAD_FOLDER']
+
     if os.path.exists(destination_folder):
         shutil.rmtree(destination_folder)
 
@@ -145,14 +187,25 @@ def upload():
                 file_path = os.path.join(destination_folder, secure_filename(uploaded_file.filename))
                 uploaded_file.save(file_path)
                 print(f'Saving file: {file_path}')
-    pros.ubahbwfolder(destination_folder)
+        if request.form.get('mode') == 'texture':
+            pros.ubahbwfolder(destination_folder)
+    else:
+        if request.form.get('mode') == 'texture':
+            return render_template('error.html', message='No folder selected for texture mode.')
 
     gambar1_path = os.path.join(destination_folder, secure_filename(gambar1.filename))
     gambar1.save(gambar1_path)
-    print(f'gambar1: {gambar1.filename}')
-    print(f'folder: {folder}')
 
-    top_images, elapsed_time = main_process(gambar1_path, 'test/dataolah')
+    cd = ColorDescriptor((8, 12, 3))  # Inisialisasi objek ColorDescriptor
+
+    mode = request.form.get('mode', 'color')  # Mode default: color
+
+    if mode == 'color':
+        top_images, elapsed_time = main_process_color(gambar1_path, destination_folder, cd)
+    elif mode == 'texture':
+        top_images, elapsed_time = main_process_texture(gambar1_path, destination_folder)
+    else:
+        return render_template('error.html', message='Invalid mode selected.')
 
     session['top_images'] = top_images
     session['elapsed_time'] = elapsed_time
@@ -164,7 +217,7 @@ def download_pdf():
     top_images = session.get('top_images', [])
     elapsed_time = session.get('elapsed_time', 0)
 
-    pdf_path = create_pdf(top_images, "test/datasave",elapsed_time)
+    pdf_path = create_pdf(top_images, "test/datasave", elapsed_time)
     return send_from_directory("test/datasave", 'result.pdf', as_attachment=True)
 
 if __name__ == '__main__':
