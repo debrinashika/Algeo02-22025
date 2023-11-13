@@ -8,7 +8,7 @@
 </head>
 <body>
     <div className='container'>
-    <h1>Image Processing App</h1>
+        <h1>Image Processing App</h1>
         <div className='search-section'>
             <form action="/upload" method="post" enctype="multipart/form-data">
                 <label for="folder">Choose Folder:</label>
@@ -19,6 +19,7 @@
                     <h3>Upload Image</h3>
                     <p>Image size must be less than <span>2MB</span></p>
                 </div>
+                <input type="file" name="gambar1" accept="image/*" id="file" style="display: none" required>
                 <button class="select-image" onclick="document.getElementById('file').click()">Select Image</button>
                 <br>
                 <label for="mode">Choose Mode:</label>
@@ -30,6 +31,24 @@
                 <button type="submit">Process Images</button>
             </form>
         </div>
+        {% if top_images %}
+        <div class="results-section">
+            <h1>Image Processing Results</h1>
+            <p>Elapsed Time: {{ elapsed_time }} seconds</p>
+            <h2>Top 10 Similar Images</h2>
+            <div class="images">
+                {% for image, similarity in top_images %}
+                    <div class="image">
+                        <img src="{{ url_for('download_file', filename=basename(image)) }}" alt="Similar Image">
+                        <p>Similarity: {{ similarity }}%</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <form action="{{ url_for('download_pdf') }}" method="get">
+                <button type="submit">Download PDF</button>
+            </form>
+        </div>
+    {% endif %}
     </div>
-</body>
+    </body>
 </html>
