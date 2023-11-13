@@ -4,23 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Processing App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <div className='container'>
     <h1>Image Processing App</h1>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <label for="folder">Choose Folder:</label>
-        <input type="file" name="folder[]" webkitdirectory directory multiple required>
-        <br>
-        <label for="gambar1">Upload Image:</label>
-        <input type="file" name="gambar1" accept="image/*" required>
-        <br>
-        <label for="mode">Choose Mode:</label>
-        <select name="mode" id="mode">
-            <option value="color">Color</option>
-            <option value="texture">Texture</option>
-        </select>
-        <br>
-        <button type="submit">Process Images</button>
-    </form>
+        <div className='search-section'>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <label for="folder">Choose Folder:</label>
+                <input type="file" name="folder[]" webkitdirectory directory multiple required>
+                <br>
+                <label for="gambar1">Upload Image:</label>
+                <input type="file" name="gambar1" accept="image/*" required>
+                <br>
+                <label for="mode">Choose Mode:</label>
+                <select name="mode" id="mode">
+                    <option value="color">Color</option>
+                    <option value="texture">Texture</option>
+                </select>
+                <br>
+                <button type="submit">Process Images</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

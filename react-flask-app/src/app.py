@@ -157,7 +157,7 @@ def main_process_texture(gambar1_path, destination_folder):
 
     return top_images, elapsed_time
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test', 'datasave')
@@ -210,7 +210,7 @@ def upload():
     session['top_images'] = top_images
     session['elapsed_time'] = elapsed_time
 
-    return render_template('result.html', top_images=top_images, elapsed_time=elapsed_time, basename=basename)
+    return render_template('result.html', top_images=top_images, elapsed_time=elapsed_time, gambar = gambar1.filename , basename=basename)
 
 @app.route('/download-pdf')
 def download_pdf():
