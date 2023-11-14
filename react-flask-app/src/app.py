@@ -15,7 +15,8 @@ from os.path import basename
 import shutil
 
 def create_pdf(top_images, destination_folder,time):
-    pdf_path = os.path.join(destination_folder, 'result.pdf')
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    pdf_path = os.path.join(app.config['UPLOAD_FOLDER'], 'result.pdf')
 
     c = canvas.Canvas(pdf_path, pagesize=letter)
 
@@ -218,8 +219,13 @@ def download_pdf():
     top_images = session.get('top_images', [])
     elapsed_time = session.get('elapsed_time', 0)
 
-    pdf_path = create_pdf(top_images, "test/datasave", elapsed_time)
-    return send_from_directory("test/datasave", 'result.pdf', as_attachment=True)
+    pdf_path = create_pdf(top_images, "test/datasave",elapsed_time)
+    
+    # Check if the file exists
+    if os.path.exists(pdf_path):
+        return send_from_directory(app.config['UPLOAD_FOLDER'], 'result.pdf', as_attachment=True)
+    else:
+        return render_template('error.html', message='PDF file not found.')
 
 if __name__ == '__main__':
     app.run(debug=True)
