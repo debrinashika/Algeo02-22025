@@ -23,6 +23,8 @@
 }
 
 body {
+    margin-top: 20px;
+    margin-bottom: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,7 +35,12 @@ body {
 .form-container {
     display: flex;
     justify-content: space-between;
+    max-width: 1200px; /* Set a maximum width for the form container */
+    width: 100%; /* Make it responsive */
+    margin: auto; /* Center the form container horizontally */
+    width: 800px; /* Set a fixed width for the form container */
 }
+
 
 .container {
     max-width: 500px;
@@ -58,7 +65,7 @@ body {
 .img-area {
     position: relative;
     width: 100%;
-    height: 240px;
+    height: 200px; /* Set a fixed height for the img-area */
     background: var(--grey);
     margin-bottom: 30px;
     border-radius: 15px;
@@ -90,7 +97,6 @@ body {
     transition: all .3s ease;
     margin-top: 10px;
 }
-
 
 .select-image:hover {
     background: var(--dark-blue);
@@ -215,7 +221,6 @@ input:checked + .toggle-slider:before {
 	transition: .5s;
 }
 
-
 #modeText {
     font-weight: bold;
     font-size: 16px;
@@ -224,13 +229,13 @@ input:checked + .toggle-slider:before {
 
 .results-section {
     text-align: center;
-    margin-top: var(--larger-margin); /* Add margin at the top */
+    margin-top: 30px; /* Add margin at the top */
 }
 
 .images {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 25px;
     justify-content: center;
 }
 
@@ -239,6 +244,8 @@ input:checked + .toggle-slider:before {
     overflow: hidden;
     aspect-ratio: 1;
     border-radius: 10px;
+    width: 250px; /* Set a fixed width for the image container */
+    height: 250px; /* Set a fixed height for the image container */
 }
 
 .image img {
@@ -246,10 +253,21 @@ input:checked + .toggle-slider:before {
     height: 100%;
     object-fit: cover;
     object-position: center;
+    max-width: 100%; /* Ensure the image doesn't exceed its container width */
+    max-height: 100%; /* Ensure the image doesn't exceed its container height */
     transition: transform 0.5s;
+}
+
+.image p {
+    position: absolute;
+    bottom: 10px; /* Adjust the bottom spacing of the text */
+    width: 100%;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8); /* Add a background to make text more readable */
+    padding: 8px;
+    margin: 0;
 }
 
 .image:hover img {
     transform: scale(1.1);
 }
-

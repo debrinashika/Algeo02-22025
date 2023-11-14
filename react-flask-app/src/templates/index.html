@@ -7,14 +7,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <div className='container'>
     <form action="/upload" method="post" enctype="multipart/form-data" class="form-container">
         <div class="container left">
             <input type="file" name="gambar1" accept="image/*" id="fileInput" style="display: none" required onchange="displayImage(this)">
             <div class="img-area" data-img="">
-                    <i class='bx bxs-cloud-upload icon'></i>
-                    <h3>Upload Image</h3>
-                    <p>Image size must be less than <span>2MB</span></p>
-                    <img id="selectedImage" src="{{ url_for('static', filename='placeholder.png') }}" alt="Selected Image">
+                <i class='bx bxs-cloud-upload icon'></i>
+                <h3>Upload Image</h3>
+                <p>Image size must be less than <span>2MB</span></p>
+                <img id="selectedImage" src="{{ url_for('static', filename='placeholder.png') }}" alt="Selected Image">
             </div>
             <button class="select-image" onclick="document.getElementById('fileInput').click()">Select Image</button>
         </div>
@@ -23,10 +24,10 @@
             <div class="toggle-button">
                 <span class="toggle-label">Choose Mode:</span>
                 <label class="toggle-switch">
-                    <input type="checkbox" id="modeToggle" onchange="changeMode()">
+                    <input type="checkbox" id="mode" onchange="changeMode()">
                     <div class="toggle-slider">
-                        <span class="toggle-option color">Color</span>
-                        <span class="toggle-option texture">Texture</span>
+                        <span class="toggle-option color" value="color">Color</span>
+                        <span class="toggle-option texture" value="texture">Texture</span>
                     </div>
                 </label>
             </div>
@@ -58,6 +59,7 @@
             </div>
         {% endif %}
     </div>
+    </div>
 
     <script>
         function displayImage(input) {
@@ -75,16 +77,13 @@
         }
 
         function changeMode() {
-            var modeText = document.getElementById("modeText");
-            var toggleSwitch = document.getElementById("mode");
+            var toggleSwitch = document.getElementById("modeToggle");
             var selectedImage = document.getElementById("selectedImage");
 
             if (toggleSwitch.checked) {
-                modeText.innerText = "Texture";
-                selectedImage.style.filter = "grayscale(100%)"; // Apply texture effect
+                selectedImage.classList.add("texture-mode");
             } else {
-                modeText.innerText = "Color";
-                selectedImage.style.filter = "none"; // Remove texture effect
+                selectedImage.classList.remove("texture-mode");
             }
         }
     </script>
