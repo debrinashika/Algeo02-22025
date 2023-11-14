@@ -91,7 +91,7 @@ def compare_color(gambar1, gambar2):
 def process_image_color(image_path, gambar1, results):
     gambar2 = cv2.imread(image_path)
 
-    similarity_score = pros.compare_color(gambar1, gambar2)
+    similarity_score = compare_color(gambar1, gambar2)
     results.append((image_path, similarity_score))
 
 def main_process_color(gambar1_path, destination_folder):
