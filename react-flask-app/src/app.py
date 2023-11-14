@@ -187,12 +187,16 @@ def download_file(filename):
 def upload():
     gambar1 = request.files['gambar1']
     folder = request.files.getlist('folder[]')
-    destination_folder = app.config['UPLOAD_FOLDER']
+    destination_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test', 'datasave')
+    input_images_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test', 'input_images')
 
     if os.path.exists(destination_folder):
         shutil.rmtree(destination_folder)
+    if os.path.exists(input_images_folder):
+        shutil.rmtree(input_images_folder)
 
     os.makedirs(destination_folder)
+    os.makedirs(input_images_folder)
 
     if folder:
         for uploaded_file in folder:
@@ -206,7 +210,7 @@ def upload():
         if request.form.get('mode') == 'texture':
             return render_template('error.html', message='No folder selected for texture mode.')
 
-    gambar1_path = os.path.join(destination_folder, secure_filename(gambar1.filename))
+    gambar1_path = os.path.join(input_images_folder, secure_filename(gambar1.filename))
     gambar1.save(gambar1_path)
 
     mode = request.form.get('mode', 'color')  # Mode default: color
