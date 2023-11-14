@@ -19,19 +19,20 @@
         <button class="select-image">Select Image</button>
     </div>
 
-    <div class="container right up">
-        <div class="toggle-button">
+    <div class="container right">
+        <div class="toggle-button" style="margin-bottom: 10px;">
             <span class="toggle-label">Choose Mode:</span>
             <label class="toggle-switch">
-                <input type="checkbox" id="modeToggle" onchange="changeMode()">
                 <div class="toggle-slider">
-                    <span class="toggle-option color">Color</span>
-                    <span class="toggle-option texture">Texture</span>
+                    <button type="button" class="toggle-btn" onclick="changeMode('color')">Color</button>
+                    <button type="button" class="toggle-btn" onclick="changeMode('texture')">Texture</button>
                 </div>
             </label>
         </div>
-
-        <button class="select-image">Choose Folder</button>
+    
+        <input class="select-folder" type="file" name="folder[]" webkitdirectory directory multiple required>
+        <br>
+        <button class="select-image" type="submit">Process Images</button>
     </div>
 
     <script src="script.js"></script>
