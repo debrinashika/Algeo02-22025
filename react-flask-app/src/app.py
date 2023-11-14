@@ -79,6 +79,15 @@ def compare(gambar1,gambar2):
     # print(f"Lama waktu proses pemrosesan: {elapsed_time:.2f} detik")
     return sim
 
+def compare_color(gambar1, gambar2):
+    features1 = pros.extract_color_features(gambar1)
+    features2 = pros.extract_color_features(gambar2)
+
+    # Calculate cosine similarity between color features
+    sim = calculate_similarity(features1, features2)
+
+    return sim
+
 def process_image_color(image_path, gambar1, results):
     gambar2 = cv2.imread(image_path)
 

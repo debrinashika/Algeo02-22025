@@ -89,15 +89,6 @@ def extract_color_features(image):
 
     return np.concatenate(avg_hsv_blocks)
 
-def compare_color(gambar1, gambar2):
-    features1 = extract_color_features(gambar1)
-    features2 = extract_color_features(gambar2)
-
-    # Calculate cosine similarity between color features
-    similarity = similarity(features1, features2)
-
-    return similarity
-
 def ubahwarna(matriksgambar):
     matrikswarna = cv2.resize(matriksgambar, (256, 256), interpolation=cv2.INTER_AREA)
     matrikswarna = compressimage(matrikswarna)
