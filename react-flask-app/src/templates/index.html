@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div className='container'>
+    <div className="container">
         <form action="/upload" method="post" enctype="multipart/form-data" class="form-container">
             <div class="container left">
                 <h3 style="margin-top: 20px;">Choose Mode</h3>
@@ -18,8 +18,8 @@
                     <label class="toggle-switch">
                         <input type="checkbox" id="mode" onchange="changeMode()">
                         <div class="toggle-slider">
-                            <span class="toggle-option color" onclick="setColorMode()" value="color"></span>
-                        <span class="toggle-option texture" onclick="setTextureMode()" value="texture"></span>
+                            <span class="toggle-option color" value="color"></span>
+                            <span class="toggle-option texture" value="texture"></span>
                         </div>
                     </label>
                     <span class="toggle-label">Texture</span>            
@@ -30,7 +30,7 @@
                 </label>
             </div>
             <div class="container right">
-                <input type="file" name="gambar1" accept="image/*" id="fileInput" style="display: none" required onchange="displayImage(this)">
+                <input type="file" id="file" name="gambar1" accept="image/*" hidden>
                 <div class="img-area" data-img="">
                     <i class='bx bxs-cloud-upload icon'></i>
                     <h3>Upload Image</h3>
@@ -70,7 +70,7 @@
     </div>
 
 
-    <script src="{{ url_for('static', filename='scripts.js') }}">
+    <script>
         function displayImage(input) {
             var selectedImage = document.getElementById("selectedImage");
 
@@ -86,7 +86,7 @@
         }
 
         function changeMode() {
-            var toggleSwitch = document.getElementById("modeToggle");
+            var modeText = document.getElementById("modeText");
             var selectedImage = document.getElementById("selectedImage");
 
             if (toggleSwitch.checked) {
@@ -95,6 +95,36 @@
                 selectedImage.classList.remove("texture-mode");
             }
         }
+
+        const selectImage = document.querySelector('.select-image');
+        const inputFile = document.querySelector('#file');
+        const imgArea = document.querySelector('.img-area');
+
+        selectImage.addEventListener('click', function () {
+            inputFile.click();
+        })
+
+        inputFile.addEventListener('change', function () {
+            const image = this.files[0]
+            if(image.size < 2000000) {
+                const reader = new FileReader();
+                reader.onload = ()=> {
+                    const allImg = imgArea.querySelectorAll('img');
+                    allImg.forEach(item=> item.remove());
+                    const imgUrl = reader.result;
+                    const img = document.createElement('img');
+                    img.src = imgUrl;
+                    imgArea.appendChild(img);
+                    imgArea.classList.add('active');
+                    imgArea.dataset.img = image.name;
+                }
+                reader.readAsDataURL(image);
+            } else {
+                alert("Image size more than 2MB");
+            }
+        })
+
     </script>
+
 </body>
 </html>

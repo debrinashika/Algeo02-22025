@@ -39,7 +39,6 @@ body {
     max-width: 1200px;
     width: 100%;
     margin: auto;
-    width: 800px; 
 }
 
 
@@ -77,15 +76,16 @@ body {
 .img-area {
     position: relative;
     width: 100%;
-    height: 200px; 
+    height: 300px; 
     background: var(--grey);
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     border-radius: 15px;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    padding: 20px 20px;
 }
 
 .img-area .icon {
@@ -132,6 +132,7 @@ body {
  transition: all .3s ease;
  z-index: 200;
 }
+
 .img-area.active:hover::before {
  opacity: 1;
 }
@@ -188,20 +189,17 @@ body {
 
 .toggle-button {
     display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.toggle-label {
-    margin-right: 10px;
+    align-items:center;
+    padding: 10px
 }
 
 .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 100px;
+    width: 105px;
     height: 34px;
-    margin-right: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
 .toggle-slider {
