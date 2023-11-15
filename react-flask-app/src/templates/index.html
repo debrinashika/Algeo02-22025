@@ -9,35 +9,43 @@
 </head>
 <body>
     <div className='container'>
-    <form action="/upload" method="post" enctype="multipart/form-data" class="form-container">
-        <div class="container left">
-            <input type="file" name="gambar1" accept="image/*" id="fileInput" style="display: none" required onchange="displayImage(this)">
-            <div class="img-area" data-img="">
-                <i class='bx bxs-cloud-upload icon'></i>
-                <h3>Upload Image</h3>
-                <p>Image size must be less than <span>2MB</span></p>
-                <img id="selectedImage" src="{{ url_for('static', filename='placeholder.png') }}" alt="Selected Image" style="display: none">
-            </div>
-            <button class="select-image" onclick="document.getElementById('fileInput').click()">Select Image</button>
-        </div>
-
-        <div class="container right">
-            <div class="toggle-button">
-                <span class="toggle-label">Choose Mode:</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="mode" onchange="changeMode()">
-                    <div class="toggle-slider">
-                        <button type="button" class="toggle-btn" onclick="changeMode('color')">Color</button>
-                        <button type="button" class="toggle-btn" onclick="changeMode('texture')">Texture</button>
-                    </div>
+        <form action="/upload" method="post" enctype="multipart/form-data" class="form-container">
+            <div class="container left">
+                <h3 style="margin-top: 20px;">Choose Mode</h3>
+                <br>
+                <div class="toggle-button">
+                    <span class="toggle-label">Color</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="mode" onchange="changeMode()">
+                        <div class="toggle-slider">
+                            <span class="toggle-option color" onclick="setColorMode()" value="color"></span>
+                        <span class="toggle-option texture" onclick="setTextureMode()" value="texture"></span>
+                        </div>
+                    </label>
+                    <span class="toggle-label">Texture</span>            
+                </div>
+                <label for="folderInput" class="select-folder">
+                    Select Folder
+                    <input id="folderInput" type="file" name="folder[]" webkitdirectory directory multiple required style="display: none;">
                 </label>
             </div>
+            <div class="container right">
+                <input type="file" name="gambar1" accept="image/*" id="fileInput" style="display: none" required onchange="displayImage(this)">
+                <div class="img-area" data-img="">
+                    <i class='bx bxs-cloud-upload icon'></i>
+                    <h3>Upload Image</h3>
+                    <p>Image size must be less than <span>2MB</span></p>
+                    <img id="selectedImage" src="{{ url_for('static', filename='placeholder.png') }}" alt="Selected Image" style="display: none">
+                </div>
+                <button class="select-image" onclick="document.getElementById('fileInput').click()">Select Image</button>
+            </div>
+        </form>
+    <br>
 
-            <input class="select-folder" type="file" name="folder[]" webkitdirectory directory multiple required>
-            <br>
-            <button class="select-image" type="submit">Process Images</button>
-        </div>
-    </form>
+    <div>
+        <button class="select-image" type="submit"> SEARCH </button>
+    </div>
+
 
     <!-- Results container -->
     <div class="results-container">
@@ -60,7 +68,7 @@
             </div>
         {% endif %}
     </div>
-    </div>
+
 
     <script src="{{ url_for('static', filename='scripts.js') }}">
         function displayImage(input) {
