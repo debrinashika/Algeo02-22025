@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <!-- <div>
+        <div>
+            <h1>Image Processing App</h1>
+            <br/>
+        </div>
+    </div> -->
     <div className="container">
         <form action="/upload" method="post" enctype="multipart/form-data" class="form-container">
             <div class="top-container">
@@ -36,13 +42,13 @@
                         <i class='bx bxs-cloud-upload icon'></i>
                         <h3>Upload Image</h3>
                         <p>Image size must be less than <span>2MB</span></p>
-                        <img id="selectedImage" src="{{ url_for('static', filename='placeholder.png') }}" alt="Selected Image">
+                        <img id="selectedImage" src="{{ url_for('static', filename='placeholder.png') }}" alt="Selected Image" style::before="display: none">
                     </div>
                     <button class="select-image" onclick="document.getElementById('fileInput').click()">Select Image</button>
                 </div>
             </div>
             <div class="containerbottom">
-                <button class="select-image" type="submit"> SEARCH </button>
+                <button class="click-button" type="submit"> SEARCH </button>
             </div>
         </form>
     <br>
@@ -54,7 +60,9 @@
             <div class="results-section">
                 <h1>Image Processing Results</h1>
                 <p>Elapsed Time: {{ elapsed_time }} seconds</p>
-                <h2>Top 10 Similar Images</h2>
+                <br>
+                <h2>Similar Images</h2>
+                <br>
                 <div class="images">
                     {% for image, similarity in top_images %}
                         <div class="image">
@@ -64,7 +72,7 @@
                     {% endfor %}
                 </div>
                 <form action="{{ url_for('download_pdf') }}" method="get">
-                    <button type="submit">Download PDF</button>
+                    <button class="click-button" type="submit">Download PDF</button>
                 </form>
             </div>
         {% endif %}
