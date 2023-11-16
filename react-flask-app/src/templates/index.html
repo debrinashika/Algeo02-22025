@@ -17,13 +17,13 @@
                     <div class="toggle-button">
                         <span class="toggle-label">Color</span>
                         <label class="toggle-switch">
-                            <input type="checkbox" id="mode" onchange="changeMode()">
+                            <input type="checkbox" id="mode" name="mode" onchange="changeMode()">
                             <div class="toggle-slider">
                                 <span class="toggle-option color" value="color"></span>
                                 <span class="toggle-option texture" value="texture"></span>
                             </div>
                         </label>
-                        <span class="toggle-label">Texture</span>            
+                        <span class="toggle-label">Texture</span>
                     </div>
                     <label for="folderInput" class="select-folder">
                         Select Folder
@@ -87,13 +87,17 @@
         }
 
         function changeMode() {
-            var mode = document.getElementById("mode");
+            var modeCheckbox = document.getElementById("mode");
             var selectedImage = document.getElementById("selectedImage");
 
-            if (toggleSwitch.checked) {
+            console.log("Checkbox checked:", modeCheckbox.checked);
+
+            if (modeCheckbox.checked) {
                 selectedImage.classList.add("texture");
+                console.log("Mode set to texture");
             } else {
                 selectedImage.classList.remove("texture");
+                console.log("Mode set to color");
             }
         }
 

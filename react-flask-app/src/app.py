@@ -156,7 +156,7 @@ def main_process_texture(gambar1_path, destination_folder):
 
         for file in files:
             if file != '':
-                image_path = os.path.join(destination_folder, file)
+                image_path = os.path.join("test/dataolah", file)
                 pool.apply_async(process_image_texture, args=(image_path, gambar1_matrix, results))
 
         pool.close()
@@ -200,22 +200,26 @@ def upload():
     os.makedirs(destination_folder)
     os.makedirs(input_images_folder)
 
+    mode = request.form.get('mode', 'color')  # Mode default: color
+    print("Received mode:", mode)
+    if mode == 'on':
+        mode = 'texture'
+
     if folder:
         for uploaded_file in folder:
             if uploaded_file.filename != '':
                 file_path = os.path.join(destination_folder, secure_filename(uploaded_file.filename))
                 uploaded_file.save(file_path)
                 print(f'Saving file: {file_path}')
-        if request.form.get('mode') == 'texture':
+        if mode == 'texture':
             pros.ubahbwfolder(destination_folder)
     else:
-        if request.form.get('mode') == 'texture':
+        if mode == 'texture':
             return render_template('error.html', message='No folder selected for texture mode.')
 
     gambar1_path = os.path.join(input_images_folder, secure_filename(gambar1.filename))
     gambar1.save(gambar1_path)
 
-    mode = request.form.get('mode', 'color')  # Mode default: color
 
     if mode == 'color':
         top_images, elapsed_time = main_process_color(gambar1_path, destination_folder)
