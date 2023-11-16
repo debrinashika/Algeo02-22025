@@ -34,8 +34,9 @@ body {
 
 .form-container {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
+    flex-wrap: wrap; 
     max-width: 1200px;
     width: 100%;
     margin: auto;
@@ -57,6 +58,13 @@ body {
     flex-direction: column;
 }
 
+.top-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%; /* Make sure it takes full width */
+}
+
 .container.right {
     order: 1;
 }
@@ -71,6 +79,11 @@ body {
 .container.right.down .select-image {
     width: 120px; 
     padding: 12px 0;
+}
+
+.containerbottom {
+    width: 100%; /* Make sure it takes full width */
+    margin-top: var(--default-spacing); /* Adjust margin as needed */
 }
 
 .img-area {

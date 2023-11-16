@@ -10,41 +10,42 @@
 <body>
     <div className="container">
         <form action="/upload" method="post" enctype="multipart/form-data" class="form-container">
-            <div class="container left">
-                <h3 style="margin-top: 20px;">Choose Mode</h3>
-                <br>
-                <div class="toggle-button">
-                    <span class="toggle-label">Color</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="mode" onchange="changeMode()">
-                        <div class="toggle-slider">
-                            <span class="toggle-option color" value="color"></span>
-                            <span class="toggle-option texture" value="texture"></span>
-                        </div>
+            <div class="top-container">
+                <div class="container left">
+                    <h3 style="margin-top: 20px;">Choose Mode</h3>
+                    <br>
+                    <div class="toggle-button">
+                        <span class="toggle-label">Color</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="mode" onchange="changeMode()">
+                            <div class="toggle-slider">
+                                <span class="toggle-option color" value="color"></span>
+                                <span class="toggle-option texture" value="texture"></span>
+                            </div>
+                        </label>
+                        <span class="toggle-label">Texture</span>            
+                    </div>
+                    <label for="folderInput" class="select-folder">
+                        Select Folder
+                        <input id="folderInput" type="file" name="folder[]" webkitdirectory directory multiple required style="display: none;">
                     </label>
-                    <span class="toggle-label">Texture</span>            
                 </div>
-                <label for="folderInput" class="select-folder">
-                    Select Folder
-                    <input id="folderInput" type="file" name="folder[]" webkitdirectory directory multiple required style="display: none;">
-                </label>
+                <div class="container right">
+                    <input type="file" name="gambar1" accept="image/*" id="fileInput" style="display: none" required onchange="displayImage(this)">
+                    <div class="img-area" data-img="">
+                        <i class='bx bxs-cloud-upload icon'></i>
+                        <h3>Upload Image</h3>
+                        <p>Image size must be less than <span>2MB</span></p>
+                        <img id="selectedImage" src="{{ url_for('static', filename='placeholder.png') }}" alt="Selected Image">
+                    </div>
+                    <button class="select-image" onclick="document.getElementById('fileInput').click()">Select Image</button>
+                </div>
             </div>
-            <div class="container right">
-                <input type="file" id="file" name="gambar1" accept="image/*" hidden>
-                <div class="img-area" data-img="">
-                    <i class='bx bxs-cloud-upload icon'></i>
-                    <h3>Upload Image</h3>
-                    <p>Image size must be less than <span>2MB</span></p>
-                    <img id="selectedImage" src="{{ url_for('static', filename='placeholder.png') }}" alt="Selected Image" style="display: none">
-                </div>
-                <button class="select-image" onclick="document.getElementById('fileInput').click()">Select Image</button>
+            <div class="containerbottom">
+                <button class="select-image" type="submit"> SEARCH </button>
             </div>
         </form>
     <br>
-
-    <div>
-        <button class="select-image" type="submit"> SEARCH </button>
-    </div>
 
 
     <!-- Results container -->
@@ -86,13 +87,13 @@
         }
 
         function changeMode() {
-            var modeText = document.getElementById("modeText");
+            var mode = document.getElementById("mode");
             var selectedImage = document.getElementById("selectedImage");
 
             if (toggleSwitch.checked) {
-                selectedImage.classList.add("texture-mode");
+                selectedImage.classList.add("texture");
             } else {
-                selectedImage.classList.remove("texture-mode");
+                selectedImage.classList.remove("texture");
             }
         }
 
