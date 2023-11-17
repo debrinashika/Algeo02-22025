@@ -110,7 +110,7 @@ def main_process_color(gambar1_path, destination_folder):
         for file in files:
             if file != '':
                 image_path = os.path.join(destination_folder, file)
-                pool.apply_async(process_image_texture, args=(image_path, gambar1_matrix, results))
+                pool.apply_async(process_image_color, args=(image_path, gambar1_matrix, results))
 
         pool.close()
         pool.join()
