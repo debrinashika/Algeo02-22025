@@ -26,26 +26,26 @@ def extract_rgb(image_matrix):
     blue_matrix = image_matrix[:, :, 2]
     return red_matrix, green_matrix, blue_matrix
 
-def rgb_to_hsv(R, G, B):
-    # Melakukan konversi warna dari RGB menjadi HSV
-    # Normalisasi nilai RGB
-    r, g, b = R / 255.0, G / 255.0, B / 255.0
-    # Mancari Cmax, Cmin, dan delta
-    Cmax = np.maximum(r, np.maximum(g, b))
-    Cmin = np.minimum(r, np.minimum(g, b))
+def rgb_to_hsv(matrix_R, matrix_G, matrix_B):
+    # Melakukan konversi warna dari RGB ke HSV
+    # Normalisasi nilai RGB ke range [0, 1]
+    r, g, b = matrix_R / 255.0, matrix_G / 255.0, matrix_B / 255.0
+    # Mencari Cmax, Cmin, dan delta
+    Cmax = np.maximum.reduce([r, g, b])
+    Cmin = np.minimum.reduce([r, g, b])
     delta = Cmax - Cmin
     # Hitung nilai H
-    H = np.zeros_like(r, dtype=np.float32)
-    mask = delta != 0
-    H[mask & (Cmax == r)] = 60 * (((g - b) / delta) % 6)
-    H[mask & (Cmax == g)] = 60 * (((b - r) / delta) + 2)
-    H[mask & (Cmax == b)] = 60 * (((r - g) / delta) + 4)
+    h = np.where(delta != 0,
+        np.where(Cmax == r, (g - b) / delta % 6,
+        np.where(Cmax == g, (b - r) / delta + 2,
+        np.where(Cmax == b, (r - g) / delta + 4, 0))),
+        0)
+    h = (h * 60) % 360 # Konversi H ke range [0, 360]
     # Hitung nilai S
-    S = np.zeros_like(r, dtype=np.float32)
-    S[mask] = delta[mask] / Cmax[mask]
+    s = np.where(Cmax != 0, delta / Cmax, 0)
     # Hitung nilai V
-    V = Cmax
-    return H, S, V
+    v = Cmax
+    return h, s, v
 
 def cosine_similarity(vektor1, vektor2):
     # Hitung cosine similarity antara dua vektor fitur
@@ -56,6 +56,7 @@ def cosine_similarity(vektor1, vektor2):
     return similarity
 
 def block_similarity(H1, S1, V1, H2, S2, V2):
+    # Menghitung similarity antara 2 blok
     # Meratakan matriks H, S, dan V menjadi vektor satu dimensi
     vector1_H = H1.flatten().astype(float)
     vector1_S = S1.flatten().astype(float)
@@ -75,6 +76,7 @@ def block_similarity(H1, S1, V1, H2, S2, V2):
     return block_sim
 
 def process_image_color(image_path, gambar1_matrix, results):
+    # Membandingkan dua gambar dan mendapatkan similarity scorenya
     # Mendapatkan matrix dari gambar2
     gambar2_matrix = cv2.imread(image_path)
     # Mengompres matrix gambar1 dan gambar2
@@ -84,10 +86,8 @@ def process_image_color(image_path, gambar1_matrix, results):
     R1, G1, B1 = extract_rgb(compressed_gambar1)
     R2, G2, B2 = extract_rgb(compressed_gambar2)
     # Konversi matriks R, G, B menjadi matriks H, S, V
-    # H1, S1, V1 = rgb_to_hsv(R1, G1, B1)
-    # H2, S2, V2 = rgb_to_hsv(R2, G2, B2)
-    H1, S1, V1 = cv2.split(cv2.cvtColor(compressed_gambar1, cv2.COLOR_BGR2HSV))
-    H2, S2, V2 = cv2.split(cv2.cvtColor(compressed_gambar2, cv2.COLOR_BGR2HSV))
+    H1, S1, V1 = rgb_to_hsv(R1, G1, B1)
+    H2, S2, V2 = rgb_to_hsv(R2, G2, B2)
     # Inisialisasi similarity scores
     total_similarity = 0.0
     # Iterasi untuk 16 blok 4 x 4
@@ -110,7 +110,6 @@ def process_image_color(image_path, gambar1_matrix, results):
     similarity_score = (total_similarity / 16) * 100
     # Menambahkan hasil ke dalam list results
     results.append((image_path, similarity_score))
-    print(similarity_score)
 
 def main_process_color(input_path, destination_folder):
     # Fungsi utama untuk pemrosesan gambar berdasarkan CBIR fitur warna
@@ -141,13 +140,11 @@ def main_process_color(input_path, destination_folder):
         # Menutup pool setelah semua tugas selesai
         pool.close()
         pool.join()
-        print(results)
         # Menyaring hasil dan menyimpan hanya yang memiliki similarity_score > 60
         results = [(image_path, similarity_score) for image_path, similarity_score in results if similarity_score > 60]
         # Mengurutkan hasil berdasarkan similarity_score
         sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
         top_images = sorted_results
-        print(top_images)
         # Menghitung waktu total pemrosesan
         end_time = time.time()
         elapsed_time = end_time - start_time
