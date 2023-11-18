@@ -13,6 +13,7 @@ import numpy as np
 import imageprocess as pros
 from os.path import basename
 import shutil
+import cbir_color as col
 
 def create_pdf(top_images, destination_folder,time):
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -78,62 +79,6 @@ def compare(gambar1,gambar2):
 
     # print(f"Lama waktu proses pemrosesan: {elapsed_time:.2f} detik")
     return sim
-
-def compare_color(gambar1, gambar2):
-    features1 = pros.extract_color_features(gambar1)
-    features2 = pros.extract_color_features(gambar2)
-
-    # Calculate cosine similarity between color features
-    sim = calculate_similarity(features1, features2)
-
-    return sim
-
-def process_image_color(image_path, gambar1, results):
-    gambar2 = cv2.imread(image_path)
-
-    similarity_score = compare_color(gambar1, gambar2)
-    results.append((image_path, similarity_score))
-
-def main_process_color(gambar1_path, destination_folder):
-    gambar1_matrix = cv2.imread(gambar1_path)
-    gambar1_matrix = pros.ubahwarna(gambar1_matrix)
-    files = os.listdir(destination_folder)
-    total_files = len(files)
-
-    with tqdm(total=total_files, desc="Processing Images") as progress:
-        start_time = time.time()
-        num_processes = 4
-        pool = Pool(processes=num_processes)
-        manager = multiprocessing.Manager()
-        results = manager.list()
-
-        for file in files:
-            if file != '':
-                image_path = os.path.join(destination_folder, file)
-                pool.apply_async(process_image_color, args=(image_path, gambar1_matrix, results))
-
-        pool.close()
-        pool.join()
-
-        print(results)
-        results = [(image_path, similarity_score) for image_path, similarity_score in results if similarity_score > 60]
-        sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
-        top_images = sorted_results
-        print(top_images)
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-
-    return top_images, elapsed_time
-
-def calculate_similarity(features1, features2):
-    # Hitung similarity antara dua vektor fitur
-    # Misalnya, menggunakan cosine similarity
-    dot_product = sum(a * b for a, b in zip(features1, features2))
-    norm1 = sum(a ** 2 for a in features1) ** 0.5
-    norm2 = sum(b ** 2 for b in features2) ** 0.5
-
-    similarity = dot_product / (norm1 * norm2 + 1e-10)
-    return similarity
 
 def process_image_texture(image_path, gambar1, results):
     gambar2 = cv2.imread(image_path)
@@ -214,15 +159,14 @@ def upload():
         if mode == 'texture':
             pros.ubahbwfolder(destination_folder)
     else:
-        if mode == 'texture':
-            return render_template('error.html', message='No folder selected for texture mode.')
+        return render_template('error.html', message='No folder selected.')
 
     gambar1_path = os.path.join(input_images_folder, secure_filename(gambar1.filename))
     gambar1.save(gambar1_path)
 
 
     if mode == 'color':
-        top_images, elapsed_time = main_process_color(gambar1_path, destination_folder)
+        top_images, elapsed_time = col.main_process_color(gambar1_path, destination_folder)
     elif mode == 'texture':
         top_images, elapsed_time = main_process_texture(gambar1_path, destination_folder)
     else:
