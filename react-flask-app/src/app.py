@@ -40,7 +40,19 @@ app.config['UPLOAD_IMAGES'] = os.path.join(os.path.dirname(os.path.abspath(__fil
 
 @app.route('/')
 def home():
-    return render_template('index.html', file_exists=file_exists)
+    return render_template('home.html', file_exists=file_exists)
+
+@app.route('/start')
+def start():
+    return render_template('index.html')
+
+@app.route('/how-to-use')
+def how_to_use():
+    return render_template('home.html')
+
+@app.route('/about-us')
+def about_us():
+    return render_template('home.html')
 
 @app.route('/uploaded-images/<path:filename>')
 def uploaded_image(filename):
