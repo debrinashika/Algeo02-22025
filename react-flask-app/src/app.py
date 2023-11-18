@@ -1,19 +1,13 @@
 from flask import Flask, render_template, request, send_from_directory, session, url_for
 from werkzeug.utils import secure_filename
-from tqdm import tqdm
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-from PIL import Image
-import cv2
-import time
 import os
 from multiprocessing import Pool
-import multiprocessing
-import numpy as np
-import imageprocess as pros
 from os.path import basename
 import shutil
 import cbir_color as col
+import cbir_texture as tex
 from urllib.parse import unquote
 
 
@@ -34,91 +28,6 @@ def create_pdf(top_images, destination_folder,time):
     c.save()
 
     return pdf_path
-
-def htgduaelmnt (mat,hasil):
-    for i in range(len(mat)):
-        for j in range(len(mat)-1):
-            x = mat[i][j][0]
-            y = mat[i][j+1][0]
-            hasil[x-1][y-1] += 1
-
-def contrast(mat):
-    i, j = np.indices(mat.shape)
-    return np.sum(mat * (i - j)**2)
-
-def homogeneity(mat):
-    i, j = np.indices(mat.shape)
-    return np.sum(mat / (1 + (i - j)**2)) 
-
-def entropy(mat):
-    non_zero_indices = np.where(mat != 0)
-    nonzero_elements = mat[non_zero_indices]
-    entropy = -np.sum(nonzero_elements * np.log(nonzero_elements))
-    return entropy
-
-def similarity (mat1,mat2):
-    bagi = (np.dot(mat1, mat2) / (np.linalg.norm(mat1)*np.linalg.norm(mat2)))*100
-    return bagi
-
-def compare(gambar1,gambar2):
-    # start_time = time.time()  # Waktu mulai proses
-    # occurence matrix
-    occurmat = np.zeros((256, 256), dtype=int)
-    occurmat2 = np.zeros((256, 256), dtype=int)
-
-    htgduaelmnt (gambar1,occurmat)
-    htgduaelmnt (gambar2,occurmat2)
-
-    occurmat = (occurmat + occurmat.T) / occurmat.sum()
-    occurmat2 = (occurmat2 + occurmat2.T) / occurmat2.sum()
-
-    vek1 = [contrast(occurmat),homogeneity(occurmat),entropy(occurmat)]
-    vek2 = [contrast(occurmat2),homogeneity(occurmat2),entropy(occurmat2)]
-
-    sim = similarity(vek1,vek2)
-    # end_time = time.time()  # Waktu selesai proses
-    # elapsed_time = end_time - start_time  # Hitung lama waktu proses
-
-    # print(f"Lama waktu proses pemrosesan: {elapsed_time:.2f} detik")
-    return sim
-
-def process_image_texture(image_path, gambar1, results):
-    gambar2 = cv2.imread(image_path)
-
-    similarity_score = compare(gambar1, gambar2)
-    results.append((image_path, similarity_score))
-
-def main_process_texture(gambar1_path, destination_folder):
-    gambar1_matrix = cv2.imread(gambar1_path)
-    gambar1_matrix = pros.ubahbw(gambar1_matrix)
-    files = os.listdir(destination_folder)
-    total_files = len(files)
-
-    with tqdm(total=total_files, desc="Processing Images") as progress:
-        start_time = time.time()
-        num_processes = 4
-        pool = Pool(processes=num_processes)
-        manager = multiprocessing.Manager()
-        results = manager.list()
-
-        for file in files:
-            if file != '':
-                image_path = os.path.join("test/dataolah", file)
-                pool.apply_async(process_image_texture, args=(image_path, gambar1_matrix, results))
-
-        pool.close()
-        pool.join()
-
-        print(results)
-        results = [(image_path, similarity_score) for image_path, similarity_score in results if similarity_score > 60]
-        sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
-        top_images = sorted_results
-        print(top_images)
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-
-    return top_images, elapsed_time
-
 
 def file_exists(file_path):
     return os.path.exists(file_path)
@@ -169,8 +78,6 @@ def upload():
                 file_path = os.path.join(destination_folder, secure_filename(uploaded_file.filename))
                 uploaded_file.save(file_path)
                 print(f'Saving file: {file_path}')
-        if mode == 'texture':
-            pros.ubahbwfolder(destination_folder)
     else:
         return render_template('error.html', message='No folder selected.')
 
@@ -181,7 +88,7 @@ def upload():
     if mode == 'color':
         top_images, elapsed_time = col.main_process_color(gambar1_path, destination_folder)
     elif mode == 'texture':
-        top_images, elapsed_time = main_process_texture(gambar1_path, destination_folder)
+        top_images, elapsed_time = tex.main_process_texture(gambar1_path, destination_folder)
     else:
         return render_template('error.html', message='Invalid mode selected.')
 
