@@ -39,7 +39,7 @@
                                 </div>
                             </label>
                             <span class="toggle-label">Texture</span>
-                        </div>
+                        </div>                   
                         <label for="folderInput" class="select-folder">
                             Select Folder
                             <input id="folderInput" type="file" name="folder[]" webkitdirectory directory multiple required style="display: none;">
@@ -55,7 +55,7 @@
                                 <img id="gambar1Preview" src="{{ url_for('uploaded_image', filename=gambar) }}" alt="Uploaded Image">
                             {% else %}
                                 <img id="selectedImage" src="{{ url_for('static', filename='placeholder.png') }}" alt="Selected Image">
-                            {% endif %}  
+                            {% endif %}
                         </div>
                         <button class="select-image" onclick="document.getElementById('fileInput').click()">Select Image</button>
                     </div>
@@ -66,6 +66,7 @@
                     <button class="click-button" type="submit"> SEARCH </button>
                 </div>
             </form>
+
     <!-- Results container -->
     <div class="results-container">
         {% if top_images %}
@@ -96,18 +97,38 @@
 
     <script>
        function displayImage(input) {
-            var selectedImage = document.getElementById("selectedImage");
+            var imgArea = document.querySelector('.img-area');
+            var selectedImage = imgArea.querySelector('img');
 
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
 
                 reader.onload = function (e) {
-                    selectedImage.src = e.target.result;
+                    var img = new Image();
+                    img.src = e.target.result;
+
+                    img.onload = function () {
+                        var aspectRatio = img.width / img.height;
+
+                        var containerWidth = imgArea.offsetWidth;
+                        var containerHeight = containerWidth / aspectRatio;
+
+                        imgArea.style.height = containerHeight + 'px';
+
+                        selectedImage.style.width = '100%';
+                        selectedImage.style.height = '100%';
+
+                        selectedImage.src = e.target.result;
+                        selectedImage.style.display = 'block';
+
+                        console.log('Image displayed successfully.');
+                    };
                 };
 
                 reader.readAsDataURL(input.files[0]);
             }
         }
+    
 
         function changeMode() {
             var modeText = document.getElementById("modeText");
