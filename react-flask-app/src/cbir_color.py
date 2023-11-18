@@ -36,9 +36,9 @@ def rgb_to_hsv(matrix_R, matrix_G, matrix_B):
     delta = Cmax - Cmin
     # Hitung nilai H
     h = np.where(delta != 0,
-        np.where(Cmax == r, (g - b) / delta % 6,
-        np.where(Cmax == g, (b - r) / delta + 2,
-        np.where(Cmax == b, (r - g) / delta + 4, 0))),
+        np.where(Cmax == r, (g - b) / (delta + np.finfo(float).eps) % 6,
+        np.where(Cmax == g, (b - r) / (delta + np.finfo(float).eps) + 2,
+        np.where(Cmax == b, (r - g) / (delta + np.finfo(float).eps) + 4, 0))),
         0)
     h = (h * 60) % 360 # Konversi H ke range [0, 360]
     # Hitung nilai S
