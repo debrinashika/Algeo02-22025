@@ -226,6 +226,17 @@ nav {
   text-align: center;
   padding: 40px;
   background-color: var(--white); 
+  border: 15px;
+}
+
+.section-title {
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color)); 
+    background-clip: text;
+    color: transparent;
+    color: var(--white); 
+    font-size: 24px; 
+    transition: color 0.3s ease-in-out;
+    border: 15px;
 }
 
 .aboutus-container {
@@ -269,7 +280,7 @@ nav {
     }
 
     .left__content {
-        max-width: none;
+        max-width: 50%;
         margin: 6rem 0;
         text-align: center;
     }

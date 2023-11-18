@@ -22,6 +22,7 @@
 
         <div class="container">
             <div class="container__left">
+                <img src="{{ url_for('static', filename='assets/wbb.png') }}" alt="foto kelompok">
                 <div class="left__content">
                     <h4></h4>
                     <p>
@@ -29,7 +30,7 @@
                 </div>
             </div>
             <div class="container__right">
-                <img src="assets/wbb.png" alt="picture"/>
+                <img src="{{ url_for('static', filename='assets/wbb.png') }}" alt="foto kelompok">
                 <div class="right__content">
                     <br/>
                     <h1>Image Processing App</h1>
@@ -60,19 +61,19 @@
           <div class="aboutus">
               <h3>Debrina Veisha Rashika W</h3>
               <h4>13522025</h4>
-              <img src="assets/wbb.png" alt="shika"/>
+              <img src= "{{ url_for('static', filename='assets/iu.jpg') }}" alt="shika"/>
               <p> as Texture's Backend Developer</p>
           </div>
           <div class="aboutus">
               <h3>Nabila Shikoofa Muida</h3>
               <h4>13522069</h4>
-              <img src="assets/wbb.png" alt="nabila"/>
+              <img src="{{ url_for('static', filename='assets/jenniejpg.jpg') }}" alt="nabila"/>
               <p> as Frontend Developer </p>
           </div>
           <div class="aboutus">
               <h3>Novelya Putri Ramadhani</h3>
               <h4>13522096</h4>
-              <img src="assets/wbb.png" alt="novel"/>
+              <img src="{{ url_for('static', filename='assets/saerom.jpg') }}" alt="novel"/>
               <p> as Color's Backend Developer</p>
           </div>
       </div>
