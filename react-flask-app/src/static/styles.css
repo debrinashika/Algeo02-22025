@@ -14,11 +14,11 @@
     --default-margin: 1rem;
     --medium-margin: 3rem;
     --larger-margin: 5rem;
-    --primary-color: #005DD1;
-    --blue: #0071FF;
-    --light-blue: #B6DBF6;
-    --dark-blue: #005DD1;
+    --primary-color: #B38151;
+    --secondary-color: #7C432B;
+    --primary-color-dark: #291515;
     --grey: #f2f2f2;
+    --white: #F0F0EC;
 }
 
 body {
@@ -28,7 +28,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: var(--light-blue);
+    background: var(--white);
     text-align: center;
 }
 
@@ -166,7 +166,7 @@ h1,h2 {
     width: 100%;
     padding: 16px 0;
     border-radius: 15px;
-    background: var(--blue);
+    background: var(--secondary-color);
     color: #fff;
     font-weight: 500;
     font-size: 16px;
@@ -177,7 +177,7 @@ h1,h2 {
 }
 
 .select-image:hover {
-    background: var(--dark-blue);
+    background: var(--primary-color-dark);
 }
 
 .click-button {
@@ -186,7 +186,7 @@ h1,h2 {
     margin-left: 220px;
     padding: 16px 0;
     border-radius: 15px;
-    background: var(--blue);
+    background: var(--secondary-color);
     color: #fff;
     font-weight: 500;
     font-size: 16px;
@@ -201,7 +201,7 @@ h1,h2 {
     width: 100%;
     padding: 16px 0;
     border-radius: 15px;
-    background: var(--blue);
+    background: var(--secondary-color);
     color: #fff;
     font-weight: 500;
     font-size: 16px;
@@ -212,7 +212,7 @@ h1,h2 {
 }
 
 .click-button:hover {
-    background: var(--dark-blue);
+    background: var(--primary-color-dark);
 }
 
 .select-folder {
@@ -220,7 +220,7 @@ h1,h2 {
     width: 100%;
     padding: 16px 0;
     border-radius: 15px;
-    background: var(--blue);
+    background: var(--secondary-color);
     color: #fff;
     font-weight: 500;
     font-size: 16px;
@@ -232,7 +232,7 @@ h1,h2 {
 }
 
 .select-folder:hover {
-    background: var(--dark-blue);
+    background: var(--primary-color-dark);
 }
 
 .select-folder input {
@@ -361,7 +361,7 @@ input:checked + .toggle-slider:before {
 #modeText {
     font-weight: bold;
     font-size: 16px;
-    color: var(--blue);
+    color: var(--secondary-color);
 }
 
 .results-section {
