@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory, session
+from flask import Flask, render_template, request, send_from_directory, session, url_for
 from werkzeug.utils import secure_filename
 from tqdm import tqdm
 from reportlab.lib.pagesizes import letter
@@ -14,6 +14,8 @@ import imageprocess as pros
 from os.path import basename
 import shutil
 import cbir_color as col
+from urllib.parse import unquote
+
 
 def create_pdf(top_images, destination_folder,time):
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -117,17 +119,28 @@ def main_process_texture(gambar1_path, destination_folder):
 
     return top_images, elapsed_time
 
-app = Flask(__name__, static_folder='static')
+
+def file_exists(file_path):
+    return os.path.exists(file_path)
+
+app = Flask(__name__, static_url_path='/static')
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test', 'datasave')
+app.config['UPLOAD_IMAGES'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test', 'input_images')
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index.html', file_exists=file_exists)
+
+@app.route('/uploaded-images/<path:filename>')
+def uploaded_image(filename):
+    filename = unquote(filename)
+    return send_from_directory(app.config['UPLOAD_IMAGES'], secure_filename(filename))
 
 @app.route('/images/<path:filename>')
 def download_file(filename):
+    print("Uploaded Image Path:", os.path.join(app.config['UPLOAD_FOLDER']))
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
 @app.route('/upload', methods=['POST'])
@@ -175,7 +188,9 @@ def upload():
     session['top_images'] = top_images
     session['elapsed_time'] = elapsed_time
 
-    return render_template('index.html', top_images=top_images, elapsed_time=elapsed_time, gambar = gambar1.filename, basename=basename)
+    banyak_gambar = len(top_images)
+
+    return render_template('index.html', top_images=top_images, elapsed_time=elapsed_time, banyakgambar = banyak_gambar, gambar=gambar1.filename, gambar_path=gambar1_path, basename=basename)
 
 @app.route('/download-pdf')
 def download_pdf():
