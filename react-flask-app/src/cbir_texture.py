@@ -22,10 +22,11 @@ def cosine_similarity(vektor1, vektor2):
     return similarity
 
 def ubahbw(matriksgambar):
-    for i in range(matriksgambar.shape[0]):
-        for j in range(matriksgambar.shape[1]):
-            matriksgambar[i][j] = matriksgambar[i][j][0] * 0.114 + matriksgambar[i][j][1] * 0.587 + matriksgambar[i][j][2] * 0.29
-    matriksgambar = cv2.resize(matriksgambar, (256, 256), interpolation=cv2.INTER_AREA)
+    blue_channel = matriksgambar[:, :, 0]
+    green_channel = matriksgambar[:, :, 1]
+    red_channel = matriksgambar[:, :, 2]
+    grayscale_values = 0.114 * blue_channel + 0.587 * green_channel + 0.299 * red_channel
+    matriksgambar = np.stack([grayscale_values, grayscale_values, grayscale_values], axis=-1)
     matriksgambar = compress(matriksgambar)
     return matriksgambar
 
