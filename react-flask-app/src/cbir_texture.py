@@ -2,9 +2,11 @@ import numpy as np
 import cv2
 import os
 import time
-from multiprocessing import Pool
+from multiprocessing import Pool, Lock
 import multiprocessing
 from tqdm import tqdm
+import cbir_color as col
+import csv
 
 def compress(image_matrix):
     image = np.array(image_matrix, dtype=np.uint8)
@@ -82,32 +84,46 @@ def process_image_texture(image_path, gambar1, results):
     similarity_score = round(compare(gambar1, gambar2),8)
     results.append((image_path, similarity_score))
 
-def main_process_texture(gambar1_path, destination_folder):
+def main_process_texture(gambar1_path, destination_folder, csv_file_path):
     gambar1_matrix = cv2.imread(gambar1_path)
     gambar1_matrix = ubahbw(gambar1_matrix)
-    files = os.listdir(destination_folder)
-    total_files = len(files)
 
-    with tqdm(total=total_files, desc="Processing Images"):
-        start_time = time.time()
-        num_processes = 4
-        pool = Pool(processes=num_processes)
-        manager = multiprocessing.Manager()
-        results = manager.list()
+    csv_lock = Lock()
+    if not os.path.exists(csv_file_path):
+        with open(csv_file_path, 'w', newline='') as csvfile:
+            header = ['Input_Path', 'Dataset_Path', 'Similarity_Score']
+            csv.writer(csvfile).writerow(header)
+    cached_results = col.read_results_from_csv(gambar1_path, destination_folder, csv_file_path)
+    if cached_results:
+        # Gunakan data dari CSV jika sudah ada
+        print("Using cache...")
+        top_images = cached_results
+    else:
+        files = os.listdir(destination_folder)
+        total_files = len(files)
 
-        for file in files:
-            if file != '':
-                image_path = os.path.join(destination_folder, file)
-                pool.apply_async(process_image_texture, args=(image_path, gambar1_matrix, results))
+        with tqdm(total=total_files, desc="Processing Images"):
+            start_time = time.time()
+            num_processes = 4
+            pool = Pool(processes=num_processes)
+            manager = multiprocessing.Manager()
+            results = manager.list()
 
-        pool.close()
-        pool.join()
+            for file in files:
+                if file != '':
+                    image_path = os.path.join(destination_folder, file)
+                    pool.apply_async(process_image_texture, args=(image_path, gambar1_matrix, results))
 
-        results = [(image_path, similarity_score) for image_path, similarity_score in results if similarity_score > 60]
-        sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
-        top_images = sorted_results + ["No Image"]
-        print(top_images)
-        end_time = time.time()
-        elapsed_time = end_time - start_time
+            pool.close()
+            pool.join()
+
+            results = [(image_path, similarity_score) for image_path, similarity_score in results if similarity_score > 60]
+            sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
+            top_images = sorted_results + cached_results
+
+            col.save_results_to_csv(top_images, gambar1_path, csv_file_path, csv_lock)
+
+            end_time = time.time()
+            elapsed_time = end_time - start_time
 
     return top_images, elapsed_time
