@@ -132,6 +132,8 @@ h1,h2 {
 
 .img-area {
     position: relative;
+    width: 400px;
+    height: 300px;
     background: var(--grey);
     margin-bottom: 15px;
     border-radius: 15px;
@@ -160,7 +162,11 @@ h1,h2 {
 .img-area p span {
     font-weight: 600;
 }
+
 .img-area img {
+    width: 400px;
+    position: absolute;
+    height: auto;
     position: absolute;
     object-fit: cover;
     object-position: center;
@@ -172,8 +178,9 @@ h1,h2 {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 400px;
+    height: auto;
+    object-fit: cover;
     background: rgba(0, 0, 0, .5);
     color: #fff;
     font-weight: 500;
@@ -192,17 +199,22 @@ h1,h2 {
 }
 
 #selectedImage {
-    max-width: 100%;
-    max-height: 100%; 
-    width: auto; 
+    width: 400px; 
     height: auto; 
-    display: none; 
+    object-fit: cover;
+    display:none;
 }
 
-.img-area.active #selectedImage {
+#gambar1Preview img {
+    width: 400px;
+    height: auto; 
     display: block; 
 }
 
+.img-area.active #selectedImage,
+.img-area.active #gambar1Preview {
+    display: block; 
+}
 
 .select-image {
     display: block;
