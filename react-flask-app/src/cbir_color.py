@@ -108,6 +108,7 @@ def process_image_color(image_path, gambar1_matrix, results):
                 total_similarity += block_sim
     # Menghitung rata-rata similarity untuk mendapatkan similarity score akhir
     similarity_score = (total_similarity / 16) * 100
+    similarity_score = round(similarity_score, 8)
     # Menambahkan hasil ke dalam list results
     results.append((image_path, similarity_score))
 
@@ -115,6 +116,8 @@ def main_process_color(input_path, destination_folder):
     # Fungsi utama untuk pemrosesan gambar berdasarkan CBIR fitur warna
     # Mendapatkan matrix dari gambar input
     input_matrix = cv2.imread(input_path)
+    # Mengkompres matrix gambar input
+    comp_input_matrix = compress(input_matrix)
     # Mengambil daftar file di folder tujuan (dataset)
     files = os.listdir(destination_folder)
     total_files = len(files)
@@ -136,7 +139,7 @@ def main_process_color(input_path, destination_folder):
                 # Mendapatkan path lengkap file gambar
                 image_path = os.path.join(destination_folder, file)
                 # Menerapkan fungsi process_image_color secara asynchronous
-                pool.apply_async(process_image_color, args=(image_path, input_matrix, results))
+                pool.apply_async(process_image_color, args=(image_path, comp_input_matrix, results))
         # Menutup pool setelah semua tugas selesai
         pool.close()
         pool.join()
