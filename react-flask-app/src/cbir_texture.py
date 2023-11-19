@@ -105,7 +105,7 @@ def main_process_texture(gambar1_path, destination_folder):
 
         results = [(image_path, similarity_score) for image_path, similarity_score in results if similarity_score > 60]
         sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
-        top_images = sorted_results
+        top_images = sorted_results + ["No Image"]
         print(top_images)
         end_time = time.time()
         elapsed_time = end_time - start_time
