@@ -47,15 +47,15 @@ python app.py
 ## Screenshots
 <p align=center>
   <h2>Home Page</h2>
-  <img src="/images/home.png/">
+  <img src="/img/home.png/">
   <nl>
   <h2>Color Mode</h2>
-  <img src="/images/1.png/">
-  <img src="/images/2.png/">
+  <img src="/img/1.png/">
+  <img src="/img/2.png/">
   <nl>
   <h2>texture Mode</h2>
-  <img src="/images/3.png/">
-  <img src="/images/4.png/">
+  <img src="/img/3.png/">
+  <img src="/img/4.png/">
   <nl>
 </p>
 
@@ -72,17 +72,24 @@ python app.py
 │   │
 │   └───database
 │   └───dataa
-│        
+├───img
+│   │
+│   └───1.png
+│   └───2.png
+│   └───3.png
+│   └───4.png
+│   └───home.png
+│  
 ├───src
-│   └───app.py
-|   └─── cbir_color.py
-|   └───cbir_texture.py
-│   │
-│   ├───template
-│   │   └─── index.html
-│   │   └─── home.html
-│   │
-│   ├───static
+     └───app.py
+     └─── cbir_color.py
+     └───cbir_texture.py
+     │
+     ├───template
+     │   └─── index.html
+     │   └─── home.html
+     │
+     ├───static
          └───styles.css
          └───styles2.css
 
