@@ -192,10 +192,9 @@ def main_process_color(input_path, destination_folder, csv_file_path):
             results = [(image_path, similarity_score) for image_path, similarity_score in results if similarity_score > 60]
             # Mengurutkan hasil berdasarkan similarity_score
             sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
-            top_images = sorted_results + ["No Image"]
-            top2_images = top_images[:-1] + cached_results
+            top_images = sorted_results + cached_results
             # Menyimpan data ke file csv
-            save_results_to_csv(top2_images, input_path, csv_file_path, csv_lock)
+            save_results_to_csv(top_images, input_path, csv_file_path, csv_lock)
             # Menghitung waktu total pemrosesan
             end_time = time.time()
             elapsed_time = end_time - start_time
