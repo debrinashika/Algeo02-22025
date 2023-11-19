@@ -46,14 +46,14 @@ python app.py
 
 ## Screenshots
 <p align=center>
-  <p>Home Page</p>
+  <h2>Home Page</h2>
   <img src="/images/home.png/">
   <nl>
-  <p>Color Mode</p>
+  <h2>Color Mode</h2>
   <img src="/images/1.png/">
   <img src="/images/2.png/">
   <nl>
-  <p>texture Mode</p>
+  <h2>texture Mode</h2>
   <img src="/images/3.png/">
   <img src="/images/4.png/">
   <nl>
