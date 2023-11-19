@@ -453,3 +453,34 @@ input:checked + .toggle-slider:before {
 .image:hover img {
     transform: scale(1.1);
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    color: #7C432B;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 1px solid #7C432B;
+    margin: 0 4px;
+    border-radius: 50px;
+}
+
+.pagination a.active,
+.pagination a:hover {
+    background-color:#7C432B;
+    color: white;
+    border-color: #7C432B;
+}
+
+.pagination .disabled {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.pagination .disabled a {
+    cursor: not-allowed;
+}

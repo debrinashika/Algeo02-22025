@@ -1,80 +1,91 @@
-# Algeo02-22025
+# Algeo02-21025
+<h2 align="center">
+  Image Processing App<br/>
+</h2>
+<hr>
 
-# ini kalau bingung react
-# cd react-flask-app dulu
+> To watch the demo of the program [_here_](). 
 
-cara jalanin dummy web
 
-cd sampe ke src
-terus jalanin : python app.py
+## General Information
+Content-Based Image Retrieval (CBIR) system revolutionizes image searches by allowing users to find similar pictures based on visual content rather than keywords. Utilizing advanced algorithms, the program extracts features such as color and texture, enabling accurate and efficient retrieval. With a user-friendly interface, this CBIR system is versatile, scalable, and applicable across diverse domains, offering a seamless experience for users seeking visually related images.
 
-# Getting Started with Create React App
+<a name="member-list"></a>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Member List
 
-## Available Scripts
+| Nama                  | NIM      |
+| --------------------- | -------- |
+| Debrina Veisha Rashika| 13522025 |
+| Nabila Shikoofa Muida | 13522069 |
+| Novelya Putri R       | 13522096 |
 
-In the project directory, you can run:
+<a name="features"></a>
 
-### `npm start`
+## Features
+- Upload a photo and dataset from your computer
+- The result of comparison between the uploaded photo and the image from the dataset
+- Download the result as a PDF file
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+<a name="setup"></a>
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Setup
 
-### `npm test`
+For the libraries, please check the `requirements.txt` file. You can install the libraries by using the command below.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+pip install -r requirements.txt
+```
 
-### `npm run build`
+<a name="usage"></a>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Usage
+You can run the program by using the command below.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+python app.py
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<a name="screenshots"></a>
 
-### `npm run eject`
+## Screenshots
+<p align=center>
+  <img src="">
+  <p>Figure 1.</p>
+  <nl>
+</p>
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+<a name="structure"></a>
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Structure
+```bash
+│   README.md
+│   requirement.txt
+│
+├───.vscode
+│       settings.json
+│
+├───doc
+│       Tubes2-Algeo-2022.pdf
+│
+├───test
+│   │
+│   └───dataset
+│           ss_1.png
+│           ss_2.png
+│           ss_3.png
+├───src
+│   │   app.py
+|   |   cbir_color.py
+|   |   cbir_texture.py
+│   │
+│   ├───template
+│   │   │   index.html
+│   │   │   home.html
+│   │
+│   ├───static
+│   │   │   styles.css
+│   │   │   styles2.css
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
