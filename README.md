@@ -38,6 +38,7 @@ pip install -r requirements.txt
 You can run the program by using the command below.
 
 ```bash
+cd react-flask-app
 cd src
 python app.py
 ```
