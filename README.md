@@ -1,11 +1,6 @@
-# Algeo02-21025
-<h2 align="center">
-  Image Processing App<br/>
-</h2>
-<hr>
+# Image Processing App
 
-> To watch the demo of the program [_here_](). 
-
+> To watch the demo of the program [_here_](https://youtu.be/ZLtBSGCD3Ks). 
 
 ## General Information
 Content-Based Image Retrieval (CBIR) system revolutionizes image searches by allowing users to find similar pictures based on visual content rather than keywords. Utilizing advanced algorithms, the program extracts features such as color and texture, enabling accurate and efficient retrieval. With a user-friendly interface, this CBIR system is versatile, scalable, and applicable across diverse domains, offering a seamless experience for users seeking visually related images.
@@ -51,8 +46,16 @@ python app.py
 
 ## Screenshots
 <p align=center>
-  <img src="">
-  <p>Figure 1.</p>
+  <img src="/image/home.png/">
+  <p>Home Page</p>
+  <nl>
+  <p>Color Mode</p>
+  <img src="/image/1.png/">
+  <img src="/image/2.png/">
+  <nl>
+  <p>texture Mode</p>
+  <img src="/image/3.png/">
+  <img src="/image/4.png/">
   <nl>
 </p>
 
@@ -63,18 +66,13 @@ python app.py
 │   README.md
 │   requirement.txt
 │
-├───.vscode
-│       settings.json
-│
 ├───doc
-│       Tubes2-Algeo-2022.pdf
 │
 ├───test
 │   │
-│   └───dataset
-│           ss_1.png
-│           ss_2.png
-│           ss_3.png
+│   └───database
+│   └───dataa
+│        
 ├───src
 │   │   app.py
 |   |   cbir_color.py
