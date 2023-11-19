@@ -63,8 +63,8 @@ python app.py
 
 ## Structure
 ```bash
-│   README.md
-│   requirement.txt
+└─── README.md
+└─── requirement.txt
 │
 ├───doc
 │
@@ -74,17 +74,17 @@ python app.py
 │   └───dataa
 │        
 ├───src
-│   │   app.py
-|   |   cbir_color.py
-|   |   cbir_texture.py
+│   └───app.py
+|   └─── cbir_color.py
+|   └───cbir_texture.py
 │   │
 │   ├───template
-│   │   │   index.html
-│   │   │   home.html
+│   │   └─── index.html
+│   │   └─── home.html
 │   │
 │   ├───static
-│   │   │   styles.css
-│   │   │   styles2.css
+         └───styles.css
+         └───styles2.css
 
 ```
 
