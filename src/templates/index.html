@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <title>Image Processing App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+        <nav>
+            <ul class="nav__links">
+                <li class="link"><a href="{{ url_for('how_to_use')}}">Home</a></li>
+                <li class="link"><a href="{{ url_for('how_to_use')}}#how-to-use">How to Use</a></li>
+                <li class="link"><a href="{{ url_for('about_us') }}#about-us">About Us</a></li>
+                <li class="link"><a href="#">Get Started</a></li>
+            </ul>
+        </nav>
+        <br>
+        <h1>
+            Image Processing App
+        </h1>
+        <br>
+        <br>
+    <div className="container">
+            <form action="/upload" method="post" enctype="multipart/form-data" class="form-container">
+                <div class="top-container">
+                   <div class="container left">
+                        <h3 style="margin-top: 20px;">Choose Mode</h3>
+                        <div class="toggle-button">
+                            <span class="toggle-label">Color</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="mode" name="mode" onchange="changeMode()">
+                                <div class="toggle-slider">
+                                    <span class="toggle-option color" value="color"></span>
+                                    <span class="toggle-option texture" value="texture"></span>
+                                </div>
+                            </label>
+                            <span class="toggle-label">Texture</span>
+                        </div>                   
+                        <label for="folderInput" class="select-folder">
+                            Select Folder
+                            <input id="folderInput" type="file" name="folder[]" webkitdirectory directory multiple required style="display: none;" onchange="handleFolderSelect(event)">
+                        </label>
+                        <!-- <div class="progress-bar" id="progressBar"></div>
+                        <div class="uploaded-area" id="uploadedArea"></div> -->
+                    </div> 
+                    
+                    <div class="container right">
+                        <input type="file" name="gambar1" accept="image/*" id="fileInput" style="display: none" required onchange="displayImage(this)">
+                        <div class="img-area" data-img="">
+                            <i class='bx bxs-cloud-upload icon'></i>
+                            <h3>Upload Image</h3>
+                            <p>Image size must be less than <span>2MB</span></p>
+                            {% if gambar %}
+                                <img id="gambar1Preview" src="{{ url_for('uploaded_image', filename=gambar) }}" alt="Uploaded Image">
+                            {% else %}
+                                <img id="selectedImage" src="{{ url_for('static', filename='placeholder.png') }}" alt="Selected Image">
+                            {% endif %}
+                        </div>
+                        <button class="select-image" onclick="document.getElementById('fileInput').click()">Select Image</button>
+                    </div>
+                </div>
+                
+                <div class="containerbottom">
+                    <br>
+                    <button class="click-button" type="submit"> SEARCH </button>
+                </div>
+            </form>
+
+    <!-- Results container -->
+    <div class="results-container">
+        {% if top_images %}
+            <div class="results-section">
+                <h1>Image Processing Results</h1>
+                <p>Elapsed Time: {{ elapsed_time }} seconds</p>
+                <p>Total Images: {{ banyakgambar }} images</p>
+                <br>
+                {% if banyakgambar>0 %}
+                <h2>Similar Images</h2>
+                <br>
+                <div class="images">
+                    {% for image, similarity in top_images %}
+                        <div class="image">
+                            <img src="{{ url_for('download_file', filename=basename(image)) }}" alt="Similar Image">
+                            <p>Similarity: {{ similarity }}%</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="pagination">
+                    {% if total_pages > 1 %}
+                        {% if page > 1 %}
+                            <a href="{{ url_for('pagination', page=page-1) }}">Prev</a>
+                        {% endif %}
+                        
+                        {% set end_page = page + 4 if page + 4 <= total_pages else total_pages %}
+                        {% for i in range(page, end_page) %}
+                            <a href="{{ url_for('pagination', page=i) }}" {% if page == i %}class="active"{% endif %}>{{ i }}</a>
+                        {% endfor %}
+                        
+                        {% if page < total_pages %}
+                            <a href="{{ url_for('pagination', page=page+1) }}">Next</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                
+                
+                <form action="{{ url_for('download_pdf') }}" method="get">
+                    <button class="download-button" type="submit">Download PDF</button>
+                </form>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+
+    <script>
+       function displayImage(input) {
+            var imgArea = document.querySelector('.img-area');
+            var selectedImage = imgArea.querySelector('img');
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    var img = new Image();
+                    img.src = e.target.result;
+
+                    img.onload = function () {
+                        var aspectRatio = img.width / img.height;
+
+                        var containerWidth = imgArea.offsetWidth;
+                        var containerHeight = containerWidth / aspectRatio;
+
+                        imgArea.style.height = containerHeight + 'px';
+
+                        selectedImage.style.width = '100%';
+                        selectedImage.style.height = '100%';
+
+                        selectedImage.src = e.target.result;
+                        selectedImage.style.display = 'block';
+
+                        console.log('Image displayed successfully.');
+                    };
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    
+
+        function changeMode() {
+            var modeText = document.getElementById("modeText");
+            var selectedImage = document.getElementById("selectedImage");
+
+            if (toggleSwitch.checked) {
+                selectedImage.classList.add("texture-mode");
+            } else {
+                selectedImage.classList.remove("texture-mode");
+            }
+        }
+
+        const selectImage = document.querySelector('.select-image');
+        const inputFile = document.querySelector('#file');
+        const imgArea = document.querySelector('.img-area');
+
+        selectImage.addEventListener('click', function () {
+            inputFile.click();
+        })
+
+        inputFile.addEventListener('change', function () {
+            const image = this.files[0]
+            if(image.size < 2000000) {
+                const reader = new FileReader();
+                reader.onload = ()=> {
+                    const allImg = imgArea.querySelectorAll('img');
+                    allImg.forEach(item=> item.remove());
+                    const imgUrl = reader.result;
+                    const img = document.createElement('img');
+                    img.src = imgUrl;
+                    imgArea.appendChild(img);
+                    imgArea.classList.add('active');
+                    imgArea.dataset.img = image.name;
+                }
+                reader.readAsDataURL(image);
+            } else {
+                alert("Image size more than 2MB");
+            }
+        })
+
+    </script>
+
+</body>
+</html>
