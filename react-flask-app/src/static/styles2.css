@@ -71,7 +71,7 @@ nav {
 
 .container__left {
     flex: 1;
-    background-image: url("assets/");
+    background-image: url("assets/hmif.jpg");
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -85,10 +85,10 @@ nav {
 }
 
 .left__content h4 {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     font-size: 2rem;
     font-weight: 600;
-    color: var(--secondary-color);
+    color: var(--primary-color-dark);
 }
 
 .left__content p {
@@ -147,17 +147,24 @@ nav {
     margin: 35px auto;
     position: relative;
     border-radius: 30px;
+    padding: 10px 20px;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all .3s ease
 }
 
+
 .primary__btn {
-    color: var(--secondary-color);
+    color: var(--white);
     background-color: var(--primary-color-dark);
-    padding: 16px 0;
+    padding: 16px 20px;
     border-radius: 15px;
     margin-right: 1rem;
     font-weight: 500;
     font-size: 16px;
-    border: none;
+    border: 15px;
     cursor: pointer;
     transition: all .3s ease;
     margin-top: 10px;
@@ -202,6 +209,8 @@ nav {
 .section-title {
   margin: 20px;
   text-align: center;
+  padding: 20px;
+  border:10px;
 }
 
 .video-container {
@@ -236,7 +245,9 @@ nav {
     color: var(--white); 
     font-size: 24px; 
     transition: color 0.3s ease-in-out;
-    border: 15px;
+    border-radius: 15px;
+    margin-right: 100px;
+    margin-left: 100px;
 }
 
 .aboutus-container {
@@ -252,7 +263,7 @@ nav {
   margin: 20px;
   padding: 20px;
   background-color: var(--white); 
-  border-radius: 10px;
+  border-radius: 15px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -260,6 +271,16 @@ nav {
   max-width: 100%;
   border-radius: 50%;
   margin-bottom: 15px;
+}
+
+footer {
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto;
 }
 
 @media (width < 780px) {
@@ -280,7 +301,7 @@ nav {
     }
 
     .left__content {
-        max-width: 50%;
+        max-width: none;
         margin: 6rem 0;
         text-align: center;
     }

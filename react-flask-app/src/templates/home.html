@@ -16,17 +16,15 @@
                 <li class="link"><a href="#">Home</a></li>
                 <li class="link"><a href="#how-to-use">How to Use</a></li>
                 <li class="link"><a href="#about-us">About Us</a></li>
-                <li class="link"><a href="{{ url_for('start') }}">Get Started</a></li>
+                <li class="link"><a href="{{ url_for('start') }}">Get Started ></a></li>
             </ul>
         </nav>
 
         <div class="container">
             <div class="container__left">
-                <img src="{{ url_for('static', filename='assets/wbb.png') }}" alt="foto kelompok">
                 <div class="left__content">
-                    <h4></h4>
-                    <p>
-                    </p>
+                    <!-- <h4>IF2123</h4>
+                    <h4>Aljabar Linier dan Geometri</h4> -->
                 </div>
             </div>
             <div class="container__right">
@@ -41,45 +39,46 @@
                         revolutionizing the way you explore and retrieve information.
                     </p>
                     <div class="action__btns">
-                        <button class="btn primary__btn">Get Started</button>
+                        <a href="{{ url_for('start') }}" class="btn primary__btn">Get Started</a>
                     </div>
                 </div>
             </div>
         </div>
-    </body>
 
     <section id="how-to-use">
-      <h2 class="section-title">How to Use</h2>
-      <div class="video-container">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/E4znbZgUWzA?si=XTviswnE0owclY8P" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-      </div>
+        <h2 class="section-title">How to Use</h2>
+        <div class="video-container">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/E4znbZgUWzA?si=XTviswnE0owclY8P" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
     </section>
 
     <section id="about-us">
-      <h2 class="section-title">About Us</h2>
-      <div class="aboutus-container">
-          <div class="aboutus">
-              <h3>Debrina Veisha Rashika W</h3>
-              <h4>13522025</h4>
-              <img src= "{{ url_for('static', filename='assets/iu.jpg') }}" alt="shika"/>
-              <p> as Texture's Backend Developer</p>
-          </div>
-          <div class="aboutus">
-              <h3>Nabila Shikoofa Muida</h3>
-              <h4>13522069</h4>
-              <img src="{{ url_for('static', filename='assets/jenniejpg.jpg') }}" alt="nabila"/>
-              <p> as Frontend Developer </p>
-          </div>
-          <div class="aboutus">
-              <h3>Novelya Putri Ramadhani</h3>
-              <h4>13522096</h4>
-              <img src="{{ url_for('static', filename='assets/saerom.jpg') }}" alt="novel"/>
-              <p> as Color's Backend Developer</p>
-          </div>
-      </div>
+        <h2 class="section-title">About Us</h2>
+        <div class="aboutus-container">
+            <div class="aboutus">
+                <h3>Debrina Veisha Rashika W</h3>
+                <h4>13522025</h4>
+                <img src= "{{ url_for('static', filename='assets/iu.jpg') }}" alt="shika"/>
+                <p> as Texture's Backend Developer</p>
+            </div>
+            <div class="aboutus">
+                <h3>Nabila Shikoofa Muida</h3>
+                <h4>13522069</h4>
+                <img src="{{ url_for('static', filename='assets/jenniejpg.jpg') }}" alt="nabila"/>
+                <p> as Frontend Developer </p>
+            </div>
+            <div class="aboutus">
+                <h3>Novelya Putri Ramadhani</h3>
+                <h4>13522096</h4>
+                <img src="{{ url_for('static', filename='assets/saerom.jpg') }}" alt="novel"/>
+                <p> as Color's Backend Developer</p>
+            </div>
+        </div>
     </section>
 
     <section id="get-started">
+
     </section>
-  </html>
+</body>
+</html>
 
