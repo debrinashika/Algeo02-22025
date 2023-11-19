@@ -27,25 +27,11 @@ Content-Based Image Retrieval (CBIR) system revolutionizes image searches by all
 - The result of comparison between the uploaded photo and the image from the dataset
 - Download the result as a PDF file
 
-<a name="technologies-used"></a>
-
-## Technologies Used
-- CustomTkinter - version 4.6.3
-- OpenCV2 - version 4.5.4
-- PIL - version 8.4.0
-- fpdf - version 1.7.2
-- numpy - version 1.21.3
-- sys - version 3.9.4
-- tkinter - version 8.6
-
-> Note: The version of the libraries above is the version that we used in this project. You can use the latest version of the libraries.
-
 <a name="setup"></a>
 
 ## Setup
-You can setup your project by cloning this repository and install the libraries above.
 
-For specific version of the libraries, please check the `requirements.txt` file. You can install the libraries by using the command below.
+For the libraries, please check the `requirements.txt` file. You can install the libraries by using the command below.
 
 ```bash
 pip install -r requirements.txt
