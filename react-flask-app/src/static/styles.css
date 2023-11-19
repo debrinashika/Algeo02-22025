@@ -469,7 +469,7 @@ input:checked + .toggle-slider:before {
     text-decoration: none;
     border: 1px solid #7C432B;
     margin: 0 4px;
-    border-radius: 4px;
+    border-radius: 50px;
 }
 
 .pagination a.active,
