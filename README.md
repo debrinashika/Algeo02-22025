@@ -79,17 +79,17 @@ python app.py
 │   └───3.png
 │   └───4.png
 │   └───home.png
-|   
+│  
 ├───src
-│   └───app.py
-|   └─── cbir_color.py
-|   └───cbir_texture.py
-│   │
-│   ├───template
-│   │   └─── index.html
-│   │   └─── home.html
-│   │
-│   ├───static
+     └───app.py
+     └─── cbir_color.py
+     └───cbir_texture.py
+     │
+     ├───template
+     │   └─── index.html
+     │   └─── home.html
+     │
+     ├───static
          └───styles.css
          └───styles2.css
 
