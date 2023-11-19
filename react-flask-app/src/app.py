@@ -106,10 +106,34 @@ def upload():
 
     session['top_images'] = top_images
     session['elapsed_time'] = elapsed_time
+    session['gambar'] = gambar1.filename
+    session['gambar_path'] = gambar1_path
+    session['page'] = 1  # Initialize the page number
 
     banyak_gambar = len(top_images)
 
-    return render_template('index.html', top_images=top_images, elapsed_time=elapsed_time, banyakgambar = banyak_gambar, gambar=gambar1.filename, gambar_path=gambar1_path, basename=basename)
+    return render_template('index.html', top_images=top_images[:12], elapsed_time=elapsed_time, banyakgambar=banyak_gambar,
+                           gambar=gambar1.filename, gambar_path=gambar1_path, basename=basename, page=1, total_pages=(banyak_gambar + 11) // 12)
+
+@app.route('/pagination', methods=['GET', 'POST'])
+def pagination():
+    top_images = session.get('top_images', [])
+    elapsed_time = session.get('elapsed_time', 0)
+    gambar_path = session.get('gambar_path', '')
+    gambar=session.get('gambar', '')
+    page = int(request.args.get('page', 1))
+    session['page'] = page
+
+    start_idx = (page - 1) * 12
+    end_idx = start_idx + 12
+
+    banyak_gambar = len(top_images)
+    total_pages = (banyak_gambar + 11) // 12
+
+    return render_template('index.html', top_images=top_images[start_idx:end_idx], elapsed_time=elapsed_time,
+                           banyakgambar=banyak_gambar, gambar=gambar, gambar_path=gambar_path,
+                           basename=basename, page=page, total_pages=total_pages)
+
 
 @app.route('/download-pdf')
 def download_pdf():
