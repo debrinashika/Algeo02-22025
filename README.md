@@ -72,7 +72,14 @@ python app.py
 │   │
 │   └───database
 │   └───dataa
-│        
+├───img
+│   │
+│   └───1.png
+│   └───2.png
+│   └───3.png
+│   └───4.png
+│   └───home.png
+|   
 ├───src
 │   └───app.py
 |   └─── cbir_color.py
