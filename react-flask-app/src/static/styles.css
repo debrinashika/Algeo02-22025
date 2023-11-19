@@ -132,8 +132,6 @@ h1,h2 {
 
 .img-area {
     position: relative;
-    width: 400px;
-	height: 400px;
     background: var(--grey);
     margin-bottom: 15px;
     border-radius: 15px;
@@ -164,12 +162,11 @@ h1,h2 {
 }
 .img-area img {
     position: absolute;
-    max-width: 100%;
-    max-height: 100%;
     object-fit: cover;
     object-position: center;
     z-index: 100;
 }
+
 .img-area::before {
     content: attr(data-img);
     position: absolute;

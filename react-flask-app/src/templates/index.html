@@ -26,9 +26,8 @@
     <div className="container">
             <form action="/upload" method="post" enctype="multipart/form-data" class="form-container">
                 <div class="top-container">
-                    <div class="container left">
+                   <div class="container left">
                         <h3 style="margin-top: 20px;">Choose Mode</h3>
-                        <br>
                         <div class="toggle-button">
                             <span class="toggle-label">Color</span>
                             <label class="toggle-switch">
@@ -42,9 +41,12 @@
                         </div>                   
                         <label for="folderInput" class="select-folder">
                             Select Folder
-                            <input id="folderInput" type="file" name="folder[]" webkitdirectory directory multiple required style="display: none;">
+                            <input id="folderInput" type="file" name="folder[]" webkitdirectory directory multiple required style="display: none;" onchange="handleFolderSelect(event)">
                         </label>
-                    </div>
+                        <!-- <div class="progress-bar" id="progressBar"></div>
+                        <div class="uploaded-area" id="uploadedArea"></div> -->
+                    </div> 
+                    
                     <div class="container right">
                         <input type="file" name="gambar1" accept="image/*" id="fileInput" style="display: none" required onchange="displayImage(this)">
                         <div class="img-area" data-img="">
