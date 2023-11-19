@@ -8,6 +8,7 @@ import time
 from multiprocessing import Pool
 import multiprocessing
 from tqdm import tqdm
+import csv
 
 def compress(image_matrix):
     # Mengompres matrix pixel gambar menjadi 256 x 256
@@ -42,7 +43,7 @@ def rgb_to_hsv(matrix_R, matrix_G, matrix_B):
         0)
     h = (h * 60) % 360 # Konversi H ke range [0, 360]
     # Hitung nilai S
-    s = np.where(Cmax != 0, delta / Cmax, 0)
+    s = np.where(Cmax != 0, delta / (Cmax + np.finfo(float).eps), 0)
     # Hitung nilai V
     v = Cmax
     return h, s, v
@@ -112,43 +113,86 @@ def process_image_color(image_path, gambar1_matrix, results):
     # Menambahkan hasil ke dalam list results
     results.append((image_path, similarity_score))
 
-def main_process_color(input_path, destination_folder):
+def save_results_to_csv(results, input_image_path, csv_file_path):
+    # Menyimpan data ke file csv
+    # Mengecek apakah file csv sudah ada
+    file_exists = os.path.exists(csv_file_path)
+    with open(csv_file_path, 'a', newline='') as csvfile:
+        fieldnames = ['input_image_path', 'image_path', 'similarity_score']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        # Jika file csv belum ada
+        if not file_exists:
+            writer.writeheader()
+        # Menyimpan results ke file csv
+        for image_path, similarity_score in results:
+            writer.writerow({'input_image_path': input_image_path, 'image_path': image_path, 'similarity_score': similarity_score})
+
+def read_results_from_csv(input_image_path, destination_folder, csv_file_path):
+    # Membaca data dari file csv
+    results = []
+    with open(csv_file_path, 'r') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            if row['input_image_path'] == input_image_path:
+                image_path = row['image_path']
+                similarity_score = float(row['similarity_score'])
+                if os.path.exists(os.path.join(destination_folder, image_path)):
+                    results.append((image_path, similarity_score))
+    return results
+
+def main_process_color(input_path, destination_folder, csv_file_path):
     # Fungsi utama untuk pemrosesan gambar berdasarkan CBIR fitur warna
     # Mendapatkan matrix dari gambar input
     input_matrix = cv2.imread(input_path)
     # Mengkompres matrix gambar input
     comp_input_matrix = compress(input_matrix)
-    # Mengambil daftar file di folder tujuan (dataset)
-    files = os.listdir(destination_folder)
-    total_files = len(files)
-    # Inisialisasi progress bar
-    with tqdm(total=total_files, desc="Processing Images") as progress:
-        # Memulai waktu proses
-        start_time = time.time()
-        # Jumlah proses paralel yang dijalankan
-        num_processes = 4
-        # Membuat pool untuk multiprocessing
-        pool = Pool(processes=num_processes)
-        # Membuat manajer untuk berbagi data antar proses
-        manager = multiprocessing.Manager()
-        # List hasil yang bisa dibagi antar proses
-        results = manager.list()
-        # Iterasi setiap file di folder
-        for file in files:
-            if file != '':
-                # Mendapatkan path lengkap file gambar
-                image_path = os.path.join(destination_folder, file)
-                # Menerapkan fungsi process_image_color secara asynchronous
-                pool.apply_async(process_image_color, args=(image_path, comp_input_matrix, results))
-        # Menutup pool setelah semua tugas selesai
-        pool.close()
-        pool.join()
-        # Menyaring hasil dan menyimpan hanya yang memiliki similarity_score > 60
-        results = [(image_path, similarity_score) for image_path, similarity_score in results if similarity_score > 60]
-        # Mengurutkan hasil berdasarkan similarity_score
-        sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
-        top_images = sorted_results
-        # Menghitung waktu total pemrosesan
-        end_time = time.time()
-        elapsed_time = end_time - start_time
+    # Mengecek apakah file csv sudah ada
+    if not os.path.exists(csv_file_path):
+        with open(csv_file_path, 'w', newline='') as csvfile:
+            header = ['Input_Path', 'Dataset_Path', 'Similarity_Score']
+            csv.writer(csvfile).writerow(header)
+    # Mengecek apakah data sudah ada di file CSV
+    cached_results = read_results_from_csv(input_path, destination_folder, csv_file_path)
+    if cached_results:
+        # Gunakan data dari CSV jika sudah ada
+        print("Using cache...")
+        top_images = cached_results
+    else:
+        # Mengambil daftar file di folder tujuan (dataset)
+        files = os.listdir(destination_folder)
+        total_files = len(files)
+        # Inisialisasi progress bar
+        with tqdm(total=total_files, desc="Processing Images") as progress:
+            # Memulai waktu proses
+            start_time = time.time()
+            # Jumlah proses paralel yang dijalankan
+            num_processes = 4
+            # Membuat pool untuk multiprocessing
+            pool = Pool(processes=num_processes)
+            # Membuat manajer untuk berbagi data antar proses
+            manager = multiprocessing.Manager()
+            # List hasil yang bisa dibagi antar proses
+            results = manager.list()
+            # Iterasi setiap file di folder
+            for file in files:
+                if file != '':
+                    # Mendapatkan path lengkap file gambar
+                    image_path = os.path.join(destination_folder, file)
+                    # Menerapkan fungsi process_image_color secara asynchronous
+                    pool.apply_async(process_image_color, args=(image_path, comp_input_matrix, results))
+            # Menutup pool setelah semua tugas selesai
+            pool.close()
+            pool.join()
+            # Menyaring hasil dan menyimpan hanya yang memiliki similarity_score > 60
+            results = [(image_path, similarity_score) for image_path, similarity_score in results if similarity_score > 60]
+            # Mengurutkan hasil berdasarkan similarity_score
+            sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
+            top_images = sorted_results + ["No Image"]
+            top2_images = top_images[:-1]
+            # Menyimpan data ke file csv
+            save_results_to_csv(top2_images, input_path, csv_file_path)
+            # Menghitung waktu total pemrosesan
+            end_time = time.time()
+            elapsed_time = end_time - start_time
+
     return top_images, elapsed_time

@@ -70,6 +70,7 @@ def upload():
     folder = request.files.getlist('folder[]')
     destination_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test', 'datasave')
     input_images_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test', 'input_images')
+    csv_file_path = os.path.join(destination_folder, 'result.csv')  # Path ke file CSV
 
     if os.path.exists(destination_folder):
         shutil.rmtree(destination_folder)
@@ -96,9 +97,8 @@ def upload():
     gambar1_path = os.path.join(input_images_folder, secure_filename(gambar1.filename))
     gambar1.save(gambar1_path)
 
-
     if mode == 'color':
-        top_images, elapsed_time = col.main_process_color(gambar1_path, destination_folder)
+        top_images, elapsed_time = col.main_process_color(gambar1_path, destination_folder, csv_file_path)
     elif mode == 'texture':
         top_images, elapsed_time = tex.main_process_texture(gambar1_path, destination_folder)
     else:
@@ -110,7 +110,7 @@ def upload():
     session['gambar_path'] = gambar1_path
     session['page'] = 1  # Initialize the page number
 
-    banyak_gambar = len(top_images)
+    banyak_gambar = len(top_images) - 1
 
     return render_template('index.html', top_images=top_images[:12], elapsed_time=elapsed_time, banyakgambar=banyak_gambar,
                            gambar=gambar1.filename, gambar_path=gambar1_path, basename=basename, page=1, total_pages=(banyak_gambar + 11) // 12)
@@ -127,7 +127,7 @@ def pagination():
     start_idx = (page - 1) * 12
     end_idx = start_idx + 12
 
-    banyak_gambar = len(top_images)
+    banyak_gambar = len(top_images) - 1
     total_pages = (banyak_gambar + 11) // 12
 
     return render_template('index.html', top_images=top_images[start_idx:end_idx], elapsed_time=elapsed_time,
