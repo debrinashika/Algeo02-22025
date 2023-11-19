@@ -76,14 +76,15 @@ def upload():
         shutil.rmtree(destination_folder)
     if os.path.exists(input_images_folder):
         shutil.rmtree(input_images_folder)
-                                                    
+
     os.makedirs(destination_folder)
     os.makedirs(input_images_folder)
 
     mode = request.form.get('mode', 'color')  # Mode default: color
-    print("Received mode:", mode)
+    
     if mode == 'on':
         mode = 'texture'
+    print("Received mode:", mode)
 
     if folder:
         for uploaded_file in folder:
@@ -100,7 +101,7 @@ def upload():
     if mode == 'color':
         top_images, elapsed_time = col.main_process_color(gambar1_path, destination_folder, csv_file_path)
     elif mode == 'texture':
-        top_images, elapsed_time = tex.main_process_texture(gambar1_path, destination_folder)
+        top_images, elapsed_time = tex.main_process_texture(gambar1_path, destination_folder, csv_file_path)
     else:
         return render_template('error.html', message='Invalid mode selected.')
 
@@ -110,9 +111,10 @@ def upload():
     session['gambar_path'] = gambar1_path
     session['page'] = 1  # Initialize the page number
 
-    banyak_gambar = len(top_images) - 1
+    top2_images = top_images + ["No Image"]
+    banyak_gambar = len(top_images)
 
-    return render_template('index.html', top_images=top_images[:12], elapsed_time=elapsed_time, banyakgambar=banyak_gambar,
+    return render_template('index.html', top2_images=top2_images, top_images=top_images[:12], elapsed_time=elapsed_time, banyakgambar=banyak_gambar,
                            gambar=gambar1.filename, gambar_path=gambar1_path, basename=basename, page=1, total_pages=(banyak_gambar + 11) // 12)
 
 @app.route('/pagination', methods=['GET', 'POST'])
@@ -127,7 +129,7 @@ def pagination():
     start_idx = (page - 1) * 12
     end_idx = start_idx + 12
 
-    banyak_gambar = len(top_images) - 1
+    banyak_gambar = len(top_images)
     total_pages = (banyak_gambar + 11) // 12
 
     return render_template('index.html', top_images=top_images[start_idx:end_idx], elapsed_time=elapsed_time,
