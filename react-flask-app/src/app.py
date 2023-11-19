@@ -131,8 +131,9 @@ def pagination():
 
     banyak_gambar = len(top_images)
     total_pages = (banyak_gambar + 11) // 12
+    top2_images = top_images + ["No Image"]
 
-    return render_template('index.html', top_images=top_images[start_idx:end_idx], elapsed_time=elapsed_time,
+    return render_template('index.html', top2_images=top2_images, top_images=top_images[start_idx:end_idx], elapsed_time=elapsed_time,
                            banyakgambar=banyak_gambar, gambar=gambar, gambar_path=gambar_path,
                            basename=basename, page=page, total_pages=total_pages)
 
