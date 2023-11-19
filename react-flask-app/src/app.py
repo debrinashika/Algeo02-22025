@@ -76,7 +76,7 @@ def upload():
         shutil.rmtree(destination_folder)
     if os.path.exists(input_images_folder):
         shutil.rmtree(input_images_folder)
-
+                                                    
     os.makedirs(destination_folder)
     os.makedirs(input_images_folder)
 

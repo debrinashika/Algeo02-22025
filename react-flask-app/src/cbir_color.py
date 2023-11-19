@@ -5,7 +5,7 @@ import numpy as np
 import cv2
 import os
 import time
-from multiprocessing import Pool
+from multiprocessing import Pool, Lock
 import multiprocessing
 from tqdm import tqdm
 import csv
@@ -113,19 +113,22 @@ def process_image_color(image_path, gambar1_matrix, results):
     # Menambahkan hasil ke dalam list results
     results.append((image_path, similarity_score))
 
-def save_results_to_csv(results, input_image_path, csv_file_path):
+def save_results_to_csv(results, input_image_path, csv_file_path, csv_lock):
     # Menyimpan data ke file csv
-    # Mengecek apakah file csv sudah ada
-    file_exists = os.path.exists(csv_file_path)
+    write_header = not os.path.exists(csv_file_path)  # Check if the file exists
     with open(csv_file_path, 'a', newline='') as csvfile:
         fieldnames = ['input_image_path', 'image_path', 'similarity_score']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        # Jika file csv belum ada
-        if not file_exists:
+        # Acquire lock
+        csv_lock.acquire()
+        # Tulis header jika file csv masih kosong
+        if write_header:
             writer.writeheader()
         # Menyimpan results ke file csv
         for image_path, similarity_score in results:
             writer.writerow({'input_image_path': input_image_path, 'image_path': image_path, 'similarity_score': similarity_score})
+        # Release lock
+        csv_lock.release()
 
 def read_results_from_csv(input_image_path, destination_folder, csv_file_path):
     # Membaca data dari file csv
@@ -146,6 +149,8 @@ def main_process_color(input_path, destination_folder, csv_file_path):
     input_matrix = cv2.imread(input_path)
     # Mengkompres matrix gambar input
     comp_input_matrix = compress(input_matrix)
+    # Membuat lock untuk sinkronisasi file CSV
+    csv_lock = Lock()
     # Mengecek apakah file csv sudah ada
     if not os.path.exists(csv_file_path):
         with open(csv_file_path, 'w', newline='') as csvfile:
@@ -188,9 +193,9 @@ def main_process_color(input_path, destination_folder, csv_file_path):
             # Mengurutkan hasil berdasarkan similarity_score
             sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
             top_images = sorted_results + ["No Image"]
-            top2_images = top_images[:-1]
+            top2_images = top_images[:-1] + cached_results
             # Menyimpan data ke file csv
-            save_results_to_csv(top2_images, input_path, csv_file_path)
+            save_results_to_csv(top2_images, input_path, csv_file_path, csv_lock)
             # Menghitung waktu total pemrosesan
             end_time = time.time()
             elapsed_time = end_time - start_time
