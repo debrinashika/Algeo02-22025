@@ -108,6 +108,7 @@ def process_image_color(image_path, gambar1_matrix, results):
                 total_similarity += block_sim
     # Menghitung rata-rata similarity untuk mendapatkan similarity score akhir
     similarity_score = (total_similarity / 16) * 100
+    similarity_score = round(similarity_score, 8)
     # Menambahkan hasil ke dalam list results
     results.append((image_path, similarity_score))
 
